@@ -20,7 +20,7 @@ from astropy.visualization import ZScaleInterval #create minimum and maximum Z v
 
 
 #import fits file
-data_im ='/Users/heikamp/Downloads/M51-Ha_MASTER.fit'
+data_im ='/Users/ttbjo/programming dings/eerstejaars_project_Praesape/G8_OpenClusters/science_frames/Master_Light_G60s_20240307.fit'
 
 hdu = fits.open(data_im)[0]
 header = hdu.header 

@@ -22,3 +22,7 @@ for index, row in data.iterrows():
         print('BINGO') 
 
 
+from astropy.io import fits
+fits_image_filename = fits.util.get_testdata_filepath('C:/Users/ttbjo/Downloads/axy.fits')
+hdul = fits.open(fits_image_filename)
+
