@@ -48,10 +48,11 @@ print('full img stats', mean, median, std)
 section1 = hdu.data[0:3900,35:4500]
 mask1 = hdu.data[1670:1850,2445:2645]
 mask2 = hdu.data[1800:2050,2730:2975]
+mask3 = hdu.data[2180:2320,3960:4080]
 
 print(wcs)
 plt.subplot(131)  
-plt.imshow(mask2, origin='lower', cmap='Greys', vmin=median, vmax=median+5*std, interpolation='nearest') 
+plt.imshow(mask3, origin='lower', cmap='Greys', vmin=median, vmax=median+5*std, interpolation='nearest') 
 
 plt.subplot(132, projection=wcs) 
 plt.imshow(section1, origin='lower', cmap='Greys', vmin=median, vmax=median+5*std, interpolation='nearest') 
@@ -72,6 +73,7 @@ apertures.plot(color='red', lw=2, alpha=0.5)
 
 #peak techniek
 plt.subplot(133) 
+mask = np.zeros(data.shape, dtype=bool)
 plt.imshow(section1, origin='lower', cmap='Greys', vmin=median, vmax=median+5*std, interpolation='nearest') 
 
 tbl = find_peaks(section1, median+5*std, box_size=11)
@@ -80,6 +82,7 @@ print(len(tbl))  # print only the first 10 peaks
 positions2 = np.transpose((tbl['x_peak'], tbl['y_peak']))
 apertures2 = CircularAperture(positions2, r=25)
 apertures2.plot(color='red', lw=2, alpha=0.5)
+
 
 plt.show()
 
