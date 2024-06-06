@@ -2,7 +2,7 @@ import pandas as pd
 from pathlib import Path
 from pathlib import PurePath
 
-#zet de locatie van member data hier:
+#flexible file location
 loc = Path(__file__).resolve().parent.parent
 loc = PurePath(loc,"data\\asu.tsv")
 print(loc)
