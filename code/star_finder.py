@@ -2,10 +2,15 @@ import pandas as pd
 from pathlib import Path
 from pathlib import PurePath
 
+<<<<<<< HEAD
 #flexible file location
 loc = Path(__file__).resolve().parent.parent
 loc = PurePath(loc,"data\\asu.tsv")
 print(loc)
+=======
+#zet de locatie van member data hier:
+loc = "C:\\python programmas\\G8_OpenClusters\\data\\asu.tsv"
+>>>>>>> c1174c981cb343ed449f931769afe1cc629a54a8
 
 #data wordt geimporteerd als pandas Dataframe (https://www.geeksforgeeks.org/python-pandas-dataframe/)
 data = pd.read_csv(loc, sep=';', comment='#')
@@ -46,10 +51,12 @@ print('full img stats', mean, median, std)
 
 #hiermee kan je een deel van de data nemen ipv de hele afbeelding
 section1 = hdu.data[0:3900,35:4500]
+mask1 = hdu.data[1670:1850,2445:2645]
+mask2 = hdu.data[1800:2050,2730:2975]
 
-
-plt.subplot(131, projection=wcs)  
-plt.imshow(section1, origin='lower', cmap='Greys', vmin=median, vmax=median+5*std, interpolation='nearest') 
+print(wcs)
+plt.subplot(131)  
+plt.imshow(mask2, origin='lower', cmap='Greys', vmin=median, vmax=median+5*std, interpolation='nearest') 
 
 plt.subplot(132, projection=wcs) 
 plt.imshow(section1, origin='lower', cmap='Greys', vmin=median, vmax=median+5*std, interpolation='nearest') 
@@ -69,7 +76,7 @@ apertures = CircularAperture(positions, r=25)
 apertures.plot(color='red', lw=2, alpha=0.5)
 
 #peak techniek
-plt.subplot(133, projection=wcs) 
+plt.subplot(133) 
 plt.imshow(section1, origin='lower', cmap='Greys', vmin=median, vmax=median+5*std, interpolation='nearest') 
 
 tbl = find_peaks(section1, median+5*std, box_size=11)
