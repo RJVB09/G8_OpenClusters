@@ -2,15 +2,10 @@ import pandas as pd
 from pathlib import Path
 from pathlib import PurePath
 
-<<<<<<< HEAD
 #flexible file location
 loc = Path(__file__).resolve().parent.parent
 loc = PurePath(loc,"data\\asu.tsv")
 print(loc)
-=======
-#zet de locatie van member data hier:
-loc = "C:\\python programmas\\G8_OpenClusters\\data\\asu.tsv"
->>>>>>> c1174c981cb343ed449f931769afe1cc629a54a8
 
 #data wordt geimporteerd als pandas Dataframe (https://www.geeksforgeeks.org/python-pandas-dataframe/)
 data = pd.read_csv(loc, sep=';', comment='#')
