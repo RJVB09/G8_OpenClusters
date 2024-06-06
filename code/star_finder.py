@@ -49,7 +49,6 @@ section1 = hdu.data[0:3900,35:4500]
 mask1 = hdu.data[1670:1850,2445:2645]
 mask2 = hdu.data[1800:2050,2730:2975]
 
-print(wcs)
 plt.subplot(131)  
 plt.imshow(mask2, origin='lower', cmap='Greys', vmin=median, vmax=median+5*std, interpolation='nearest') 
 
