@@ -38,7 +38,7 @@ from photutils.aperture import CircularAperture
 from photutils.detection import find_peaks
 
 #zet de locatie van member data hier (het zit in hetzelfde mapje dus hoeft niet verandert te worden):
-image_file = get_pkg_data_filename('20240306_data.fits')
+image_file = get_pkg_data_filename('20240307_data.fits')
 hdu = fits.open(image_file)[0]
 wcs = WCS(hdu.header)
 mean, median, std = sigma_clipped_stats(hdu.data, sigma=3.0)
@@ -87,6 +87,10 @@ for id in range(len(tbl2)):
 print(tbl)
 
 #tbl.write('stars_full_img.ecsv', overwrite=True) #file maken met data
-plt.show()
+
 
 #deel 3 :) DIT IS VOOR DE ANDERE AFBEELDING!
+
+
+
+plt.show()
