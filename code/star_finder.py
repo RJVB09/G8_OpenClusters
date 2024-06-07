@@ -50,7 +50,7 @@ section2 = hdu.data[1700:2400,2250:4500]
 
 #peak techniek
 #projection=wcs
-plt.subplot(121) 
+plt.subplot(121,projection=wcs) 
 mask = np.zeros(section1.shape, dtype=bool)
 mask[1620:1850,2425:2630] = True
 mask[1800:2050,2730:2975] = True
@@ -68,10 +68,9 @@ tbl['id'] = np.arange(len(tbl))
 positions = np.transpose((tbl['x_peak'], tbl['y_peak']))
 apertures = CircularAperture(positions, r=25)
 apertures.plot(color='red', lw=2, alpha=0.5)
-print(tbl)
 
 #Dit deel voegt de datapunten toe van sterren die uitgemask waren in het eerste gedeelte
-plt.subplot(122) 
+plt.subplot(122,projection=wcs) 
 plt.imshow(section1, origin='lower', cmap='Greys', vmin=median, vmax=median+5*std, interpolation='nearest') 
 mask2 = np.zeros(section1.shape, dtype=bool)
 mask2[35:4500,0:2000] = True
@@ -85,7 +84,7 @@ apertures2.plot(color='red', lw=2, alpha=0.5)
 tbl2['id'] = np.arange(len(tbl2))+len(tbl)
 for id in range(len(tbl2)):
     tbl.add_row(tbl2[id])
-
+print(tbl)
 
 #tbl.write('stars_full_img.ecsv', overwrite=True) #file maken met data
 plt.show()
