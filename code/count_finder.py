@@ -134,9 +134,12 @@ for index, row in star_pos.iterrows():
                 col = 'r'
             elif result[3]:
                 col = 'y'
-            plt.gca().add_patch(plt.Circle((row['xcentroid'],row['ycentroid']),i,color=col, lw=2, alpha=0.5, fill=False))
+            plt.gca().add_patch(plt.Circle((row['xcentroid'], row['ycentroid']), i, color=col, lw=2, alpha=0.5, fill=False))
+            plt.gca().add_patch(plt.Circle((row['xcentroid'], row['ycentroid']), i*2, color=col, linestyle='dashed', lw=1, alpha=0.5, fill=False))
+            plt.gca().add_patch(plt.Circle((row['xcentroid'], row['ycentroid']), i*3, color=col, linestyle='dashed', lw=1, alpha=0.5, fill=False))
             plt.text(row['xcentroid'], row['ycentroid'], int(row['id']), color=col, fontsize='medium')
             print(result[0], i, row['id'])
+            #WIP, do actual count using photutils
 
             background = cut_background(i+extra_cover,int(row['xcentroid']),int(row['ycentroid']),background)
             background_mask = update_mask(i+extra_cover,int(row['xcentroid']),int(row['ycentroid']),background_mask)
