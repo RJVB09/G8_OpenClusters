@@ -1,15 +1,9 @@
-import pandas as pd
-from pathlib import Path
-from pathlib import PurePath
-#deel 2 :)
 from astropy.io import fits
 from astropy.utils.data import get_pkg_data_filename
 import matplotlib.pyplot as plt
 from astropy.wcs import WCS
 import numpy as np
-from matplotlib.colors import LogNorm
 from astropy.stats import sigma_clipped_stats
-from photutils.detection import DAOStarFinder
 from photutils.aperture import CircularAperture
 from photutils.detection import find_peaks
 
@@ -54,7 +48,6 @@ apertures.plot(color='red', lw=2, alpha=0.5)
 plt.subplot(212) 
 plt.imshow(section1, origin='lower', cmap='Greys', vmin=median, vmax=median+5*std, interpolation='nearest') 
 mask1_2 = np.zeros(section1.shape, dtype=bool)
-#mask1_2[35:4500,0:2000] = True
 mask1_2[0:4000,0:4200] = True
 mask1_2[1600:2400,2250:4200] = False
 tbl1_2 = find_peaks(section1, median+5*std, box_size=50, border_width=10, wcs=wcs, npeaks=4, mask=mask1_2)
@@ -69,4 +62,4 @@ for id in range(len(tbl1_2)):
 print(tbl)
 plt.show()
 
-#tbl.write('stars_full_img.ecsv', overwrite=True) #file maken met data
+#tbl.write('stars_data_20240307III.ecsv', overwrite=True) #file maken met data
