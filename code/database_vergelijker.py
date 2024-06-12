@@ -16,6 +16,7 @@ data_db = data_db.drop([0,1])
 data_db['DE_ICRS'] = data_db['DE_ICRS'].str.replace('+', '')
 data_db['DE_ICRS'] = data_db['DE_ICRS'].astype(float)
 data_db['RA_ICRS'] = data_db['RA_ICRS'].astype(float)
+data_db = data_db.rename(columns={'Plx':'plx'})
 
 #import hier database met meer sterren van Mitchel, dan kunnen we data dubbelchecken en vergelijken
 loc_gaudain = PurePath(main_loc,"data\\cantat_gaudain2018.tsv")
@@ -66,15 +67,19 @@ member_stars = pd.DataFrame(data=members_array, columns=['RA', 'DEC']) """
 
 #dit deel is gegenereerd door copilot gebaseerd op de methodes die hierboven gecomment zijn. Verbeterde efficiency
 def db_verg(df, df_db):
+    df_db['plx'] = df_db['plx'].astype(float)
+
     ra_stars = df['skycoord_peak.ra'].values
     dec_stars = df['skycoord_peak.dec'].values
     ra_db = df_db['RA_ICRS'].values
     dec_db = df_db['DE_ICRS'].values
+    plx = df_db['plx'].values
 
     x_peak = df['x_peak'].values
     y_peak = df['y_peak'].values
     peak_value = df['peak_value'].values
     id = df['id'].values
+    
 
     ra_diff = np.abs(ra_stars[:, None] - ra_db)
     dec_diff = np.abs(dec_stars[:, None] - dec_db)
@@ -89,10 +94,16 @@ def db_verg(df, df_db):
     matched_y = y_peak[matched_indices]
     matched_peak_val = peak_value[matched_indices]
     matched_id = id[matched_indices]
+    
+    matched_plx = []
+    for i, star_match in enumerate(matches):
+        if np.any(star_match):
+            db_index = np.where(star_match)[0][0]  # Take the first matching index
+            matched_plx.append(plx[db_index])
 
     # Create the resulting DataFrame
-    members_array = np.column_stack((matched_ra, matched_dec, matched_x, matched_y, matched_peak_val, matched_id))
-    return pd.DataFrame(data=members_array, columns=['skycoord_peak.ra', 'skycoord_peak.dec', 'x_peak', 'y_peak', 'peak_value', 'id'])
+    members_array = np.column_stack((matched_ra, matched_dec, matched_x, matched_y, matched_peak_val, matched_id, matched_plx))
+    return pd.DataFrame(data=members_array, columns=['skycoord_peak.ra', 'skycoord_peak.dec', 'x_peak', 'y_peak', 'peak_value', 'id', 'plx'])
 
 member_stars_06_alf = db_verg(data_stars_06, data_db)
 member_stars_07_alf = db_verg(data_stars_07, data_db)
@@ -137,4 +148,5 @@ member_stars['x_pixel'] = pixel_coords[:, 0]
 member_stars['y_pixel'] = pixel_coords[:, 1]
 plt.scatter(member_stars['x_pixel'], member_stars['y_pixel'], facecolors='none', edgecolors='r', s=5)
 
+#member_stars.to_csv('member_stars.csv') #file maken met data
 plt.show()
