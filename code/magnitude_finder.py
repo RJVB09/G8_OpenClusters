@@ -23,7 +23,7 @@ max_y = 3900
 position_data_path = "code\\stars_data_20240307.ecsv"
 #position_data_path = "code\\small_star_dataset.csv"
 magnitude_data_output_path = "code\\magnitudes.csv"
-fit_data_name = "Master_Light_I60s_20240307.fit"
+fit_data_name = "20240307_data.fits"
 
 #Zero point star, zero_point_counts : counts of the zero point star in the image. zero_point_offset :
 #zero_point_counts = 10000
@@ -43,8 +43,11 @@ base_radius = 15
 
 #Calibration star
 calib_id = 203
-calib_mag = 9.843
+calib_mag = 10.619
+#calib_mag = 9.843
 calib_mag_err = 0.069
+
+
 ##calib_parallax = 5.3669 #milli arcseconds
 #calib_parallax_err = 0.02
 #https://simbad.cds.unistra.fr/simbad/sim-id?Ident=%401108429&Name=BD%2b20%20%202151&submit=submit
@@ -72,7 +75,9 @@ image_file = get_pkg_data_filename(fit_data_name)
 hdu = fits.open(image_file)[0]
 section = hdu.data[min_y:max_y,min_x:max_x]
 
-plt.subplot(111)
+wcs = WCS(hdu.header)
+
+plt.subplot(111,projection=wcs)
 
 positions = np.transpose((star_pos['x_peak'], star_pos['y_peak']))
 
