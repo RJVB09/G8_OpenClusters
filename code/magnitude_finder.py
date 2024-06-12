@@ -49,6 +49,7 @@ calib_parallax = 5.3669 #milli arcseconds
 calib_parallax_err = 0.02
 #https://simbad.cds.unistra.fr/simbad/sim-id?Ident=%401108429&Name=BD%2b20%20%202151&submit=submit
 
+#Calculate appearant magnitude of the calibration star
 distance = 1000 / (calib_parallax) #in parsec
 distance_err = 1000 / (calib_parallax ** 2) * calib_parallax_err
 distance_modulus = 5 * np.log10(distance / 10)
