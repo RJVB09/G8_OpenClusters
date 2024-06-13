@@ -79,6 +79,7 @@ def db_verg(df, df_db):
     y_peak = df['y_peak'].values
     peak_value = df['peak_value'].values
     id = df['id'].values
+    img = df['img'].values
     
 
     ra_diff = np.abs(ra_stars[:, None] - ra_db)
@@ -94,6 +95,7 @@ def db_verg(df, df_db):
     matched_y = y_peak[matched_indices]
     matched_peak_val = peak_value[matched_indices]
     matched_id = id[matched_indices]
+    matched_img = img[matched_indices]
     
     matched_plx = []
     for i, star_match in enumerate(matches):
@@ -102,8 +104,8 @@ def db_verg(df, df_db):
             matched_plx.append(plx[db_index])
 
     # Create the resulting DataFrame
-    members_array = np.column_stack((matched_ra, matched_dec, matched_x, matched_y, matched_peak_val, matched_id, matched_plx))
-    return pd.DataFrame(data=members_array, columns=['skycoord_peak.ra', 'skycoord_peak.dec', 'x_peak', 'y_peak', 'peak_value', 'id', 'plx'])
+    members_array = np.column_stack((matched_ra, matched_dec, matched_x, matched_y, matched_peak_val, matched_id, matched_plx, matched_img))
+    return pd.DataFrame(data=members_array, columns=['skycoord_peak.ra', 'skycoord_peak.dec', 'x_peak', 'y_peak', 'peak_value', 'id', 'plx', 'img'])
 
 member_stars_06_alf = db_verg(data_stars_06, data_db)
 member_stars_07_alf = db_verg(data_stars_07, data_db)
@@ -140,7 +142,7 @@ image_file2 = get_pkg_data_filename('20240307_data_I.fits')
 hdu2 = fits.open(image_file2)[0]
 wcs2 = WCS(hdu2.header)
 mean2, median2, std2 = sigma_clipped_stats(hdu2.data, sigma=3.0)
-plt.subplot(212,projection=wcs) 
+plt.subplot(212,projection=wcs2) 
 plt.imshow(hdu2.data, origin='lower', cmap='Greys', vmin=median2, vmax=median2+5*std2, interpolation='nearest') 
 
 pixel_coords = wcs2.wcs_world2pix(member_stars[['skycoord_peak.ra', 'skycoord_peak.dec']].values, 1)

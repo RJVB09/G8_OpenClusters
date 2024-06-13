@@ -42,6 +42,7 @@ tbl = find_peaks(section1, median+5*std, box_size=11, mask=mask, border_width=10
 tbl['peak_value'].info.format = '%.8g'
 
 tbl['id'] = np.arange(len(tbl))
+tbl['img'] = '07'
 positions = np.transpose((tbl['x_peak'], tbl['y_peak']))
 apertures = CircularAperture(positions, r=25)
 apertures.plot(color='red', lw=2, alpha=0.5)
@@ -59,10 +60,11 @@ apertures1_2.plot(color='red', lw=2, alpha=0.5)
 
 #data formatten en combineren in een enkele tabel
 tbl1_2['id'] = np.arange(len(tbl1_2))+len(tbl)
+tbl1_2['img'] = '07'
 for id in range(len(tbl1_2)):
     tbl.add_row(tbl1_2[id])
 print(tbl)
 plt.show()
 
 #csv file maken, alleen uncommenten als het nodig is :)
-#tbl.write('stars_data_20240307III.ecsv', overwrite=True) #file maken met data
+#tbl.write('stars_data_20240307.ecsv', overwrite=True) #file maken met data
