@@ -20,13 +20,20 @@ max_y = 3900
 
 #Path to dataset containing the pixel coords of the stars
 position_data_path = "code\\stars.ecsv"
-fit_data_name = "20240307_data.fits"
+fit_data_name = "Master_Light_I60s_20240307.fit"
 
 
-contrast_range = [512, 674]
+contrast_range = [150.99, 202.11]
 
 #Pixels to add on to the masking radius.
 extra_cover = 10
+
+#manually set the radii of certain cases
+#id : radius
+set_radii = {
+    177 : 8,
+    178 : 18
+}
 
 #Reads a circular area from the image
 def read_counts(radius, centroid_x, centroid_y, image, noise):
@@ -120,15 +127,21 @@ background_mask = np.zeros((section.shape[0],section.shape[1]))
 expected_noise = process_background(section, 65536)[0]
 print(expected_noise)
 
-plt.subplot(131)
+plt.subplot(111)
 plt.imshow(section, origin='lower', cmap='Greys', vmin=contrast_range[0], vmax=contrast_range[1], interpolation='nearest') 
+
+radius = []
 
 for index, row in star_pos.iterrows():
     # X and Y are flipped for some reason
     prev_result = -1000
+
     for i in range(100):
         result = read_counts(i,int(row['xcentroid']),int(row['ycentroid']),section,expected_noise)
-        if prev_result > result[0] or i == 99:
+        if prev_result > result[0] or i == 99 or int(row['id']) in set_radii.keys():
+            if int(row['id']) in set_radii.keys():
+                i = set_radii.get(int(row['id']))
+                result = read_counts(i,int(row['xcentroid']),int(row['ycentroid']),section,expected_noise)
             col = 'b'
             if result[2]:
                 col = 'r'
@@ -138,7 +151,7 @@ for index, row in star_pos.iterrows():
             plt.gca().add_patch(plt.Circle((row['xcentroid'], row['ycentroid']), i*2, color=col, linestyle='dashed', lw=1, alpha=0.5, fill=False))
             plt.gca().add_patch(plt.Circle((row['xcentroid'], row['ycentroid']), i*3, color=col, linestyle='dashed', lw=1, alpha=0.5, fill=False))
             plt.text(row['xcentroid'], row['ycentroid'], int(row['id']), color=col, fontsize='medium')
-            print(result[0], i, row['id'])
+            radius.append(i)
             #WIP, do actual count using photutils
 
             background = cut_background(i+extra_cover,int(row['xcentroid']),int(row['ycentroid']),background)
@@ -146,11 +159,12 @@ for index, row in star_pos.iterrows():
             break
         prev_result = result[0]
 
-plt.subplot(132)
-plt.imshow(background_mask, origin='lower', cmap='Greys', vmin=0, vmax=1, interpolation='nearest') 
 
-plt.subplot(133)
-plt.imshow(background, origin='lower', cmap='Greys', vmin=contrast_range[0], vmax=contrast_range[1], interpolation='nearest') 
+#plt.subplot(132)
+#plt.imshow(background_mask, origin='lower', cmap='Greys', vmin=0, vmax=1, interpolation='nearest') 
+
+#plt.subplot(133)
+#plt.imshow(background, origin='lower', cmap='Greys', vmin=contrast_range[0], vmax=contrast_range[1], interpolation='nearest') 
 
 plt.show()
 

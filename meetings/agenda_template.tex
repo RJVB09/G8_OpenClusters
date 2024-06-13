@@ -1,0 +1,102 @@
+\documentclass[11pt,a4paper]{article} 
+
+\usepackage[english]{babel} %needs to specified for minutes package (else it will be in German)
+\usepackage{a4wide}%For a wider spacing of the text (smaller left/right margin)
+\usepackage{amssymb}% http://ctan.org/pkg/amssymb  for the check and cross symbol
+\usepackage{pifont}% http://ctan.org/pkg/pifont    for the check and cross symbol
+\usepackage{setspace}
+\usepackage{minutes}
+
+\pagestyle{plain}
+
+%more memorable commands to make the checked and crossed symbols
+\newcommand{\done}{\ding{51}}%
+\newcommand{\fail}{\ding{55}}%
+
+\begin{document}
+
+\section{Agenda}
+\begin{itemize}
+
+\item Meeting 6 juni 2024 13:00 – 14:00
+\item Plaats: C4.116
+
+\item Voorzitter: AJ\footnote{AJ: Arie Jongejan}
+\item Notulen: TJ\footnote{TJ: Tommy Jones}
+\item Present:
+\begin{itemize} 
+\item Prof. Lex Kaper 
+\item Omar Ould Boukattine
+\item Stephanie Heikamp
+\item RvB\footnote{RvB: Roan van Brussel}, AJ, TJ
+\end{itemize}
+\end{itemize}
+Sterrenkundeproject:  Groep 02-Open Clusters M44 
+
+\begin{enumerate}
+\item	Korte introductie deelnemers 
+\item	Waar staan we (RvB)
+\item	Beschrijving onderzoeksrichting/aanpak: stragglers binnen M44 (AJ)
+\begin{enumerate}
+\item Matchen objecten uit observaties aan database M44
+\item Bepalen HR positie middels resultaat filters
+\item Identificeren stragglers (niet in hoofdreeks passende 
+objecten)
+\end{enumerate}
+\item	Specifieke vragen (TJ)
+\begin{enumerate} 
+\item	Lijkt dit een zinvolle onderzoeksrichting?
+\item	Zijn er voldoende meetbare objecten (stragglers) binnen onze data set?
+\item	Hoe identificeren we die van de rest (2.c)? (N.B. We hebben de membership lijst van de hele cluster!)
+\item	Zijn er andere eigenschappen (anders dan temperatuur/kleur) die blue stragglers onderscheiden van andere objecten binnen de cluster (snelheid, plaats in 3D of in hypersphere,…)?
+\end{enumerate}
+\item	Vervolgstappen
+\item	Afronding
+\end{enumerate}
+
+\pagebreak
+\section{Notulen}
+\subsection{Waar we nu zijn}
+We hebben observaties en stacks met i', r' en g' gemaakt waarbij we de sterren kunnen detecteren en vergelijken met een database aan "members" van M44. Dit komt uit een onderzoek van Jeison Alfonso en Alejandro García-Varela in 2023. Daaruit willen we kijken naar (blauwe) stragglers in een HR-diagram.
+\subsection{Matchen objecten uit observaties aan database en magnitude vinden}
+We kunnen bij het koppelen van sterdata gebruik maken van de gegeven parallax uit de Gaia database van een of meerdere sterren en kunnen dan een zero point correction uitvoeren om de magnitude van alle sterren te berekenen. Dit moet wel in verschillende filters.
+Er zijn ook sterren die in realiteit deel zijn van de cluster die niet opgenomen zijn in Gaia door een te hoge magnitude of andere factoren. Het is ook interessant om te zien wat de zwakste ster is die we hebben kunnen detecteren.
+\subsection{Extinctie}
+Interacties tussen Gas/Stof en licht tussen ons en de sterren zal de Hertzprung-Russel (HR) diagram aanpassen van de realiteit. We moeten dus onze data calibreren met de extinctie. Dit is voor elke filter anders. We kunnen hiervoor "kleur-kleur diagrammen" maken. Hiermee kunnen we de extinctie vinden. Een aantal opties hiervoor zijn g'-r' of r'-i'.
+\subsection{Stragglers}
+(Blue) Stragglers blijken anders te evolueren dan andere sterren. Lex is van mening dat dit komt door botsingen maar literatuur stelt dat er verschillende theorie\"en zijn voor dit gedrag. De primaire theorie stelt dat botsingen tussen sterren zorgen voor een "verjongingskuur" van de ster wat leidt tot ongebruikelijke sterevolutie, wat zorgt tot het gedrag dat we zien van deze stragglers. Deze botsingen komen waarschijnlijk uit dubbelstersystemen die de norm blijken te zijn bij zware sterren. In het algemeen wordt de evolutie van clusters niet goed begrepen en is een actief onderzoeksveld.
+\subsection{Isochronen}
+Isochronen zijn een manier om meer informatie uit de cluster te krijgen. Hiermee kunnen we de leeftijd van een cluster vinden. Er is een bepaalde "turn-off" punt waar de sterren afbuigen van hoofdas staan waaruit de leeftijd afgeleid kan worden met een fit. Stragglers passen daar niet goed bij door hun verjongingskuur. Parsec modellen worden gebruikt om een fit uit te voeren op de data om de leeftijd te vinden van een cluster. Deze zijn te genereren in \url{http://stev.oapd.inaf.it/cgi-bin/cmd}. We hebben hierbij wel de extinctie-waardes nodig
+\pagebreak
+
+\section{Antwoorden op specifieke vragen (deel 4 van agenda)}
+\begin{enumerate}
+\item	Lijkt dit een zinvolle onderzoeksrichting?
+\item[] Onderzoek in de evolutie van open clusters is een actueel onderzoeksgebied en vooral het bestaan van stragglers is een grote vraag in de sterrenkunde.
+\item	Zijn er voldoende meetbare objecten (stragglers) binnen onze data set?
+\item[] Er zijn een redelijk aantal stragglers in een cluster en deze zijn vaak ook helderder dan andere sterren doordat ze meer massa hebben door de botsingen. De enige vraag is of we deze sterren binnen ons zichtveld hebben opgenomen doordat we niet de hele cluster hebben kunnen waarnemen.
+\item	Hoe identificeren we die van de rest (2.c)? (N.B. We hebben de membership lijst van de hele cluster!)
+\item[] Stragglers zijn te zien in HR-diagrammen en Isochronen als datapunten die op locaties zitten waar ze niet horen te zitten. Dit is waarom ze "stragglers" genoemd worden. Ze dwalen af van het normale pad van een ster door de botsingen. 
+\item	Zijn er andere eigenschappen (anders dan temperatuur/kleur) die blue stragglers onderscheiden van andere objecten binnen de cluster (snelheid, plaats in 3D of in hypersphere,…)?
+\item[] Hier hadden we niet echt een direct antwoord op gekregen, maar dit kunnen we bij de volgende meeting opnieuw opbrengen als vraag.
+\end{enumerate}
+
+\section{TODO lijst}
+Dit is best grof maar geeft ons een grof idee wat er gedaan moet worden.
+\begin{enumerate}
+\item Sterren vinden/detecteren uit stacked data
+\item Gevonden sterren vergelijken met database om members van M44 te vinden
+\item Magnitude van sterren vinden in verschillende filters
+\item Extinctie van sterrenstof en atmosfeer (airmass) vinden bij verschillende filters
+\item Isochroon opstellen en fitten in g’-r’ of r’-i’
+\item HR diagram maken
+\item Blue stragglers vinden
+\item Meer analyse doen op de gevonden Blue stragglers (hier komen we later nog op terug)
+
+
+
+\end{enumerate}
+
+
+
+\end{document}
