@@ -22,8 +22,8 @@ max_y = 3900
 #Path to dataset containing the pixel coords of the stars
 position_data_path = "code\\stars_data_20240307.ecsv"
 #position_data_path = "code\\small_star_dataset.csv"
-magnitude_data_output_path = "code\\magnitudes.csv"
-fit_data_name = "20240307_data.fits"
+magnitude_data_output_path = "code\\magnitudesI.csv"
+fit_data_name = "Master_Light_I60s_20240307.fit"
 
 #Zero point star, zero_point_counts : counts of the zero point star in the image. zero_point_offset :
 #zero_point_counts = 10000
@@ -33,7 +33,6 @@ fit_data_name = "20240307_data.fits"
 date = '2023-03-07'
 instrument = 'WFC' #!
 filter = 'F775W' #!
-exp_time = 60
 
 #contrast_range = [150.99, 202.11]
 contrast_range = [493.14,606.94]
@@ -45,7 +44,7 @@ base_radius = 15
 calib_id = 203
 calib_mag = 10.619
 #calib_mag = 9.843
-calib_mag_err = 0.069
+calib_mag_err = 0.073
 
 
 ##calib_parallax = 5.3669 #milli arcseconds
@@ -75,9 +74,7 @@ image_file = get_pkg_data_filename(fit_data_name)
 hdu = fits.open(image_file)[0]
 section = hdu.data[min_y:max_y,min_x:max_x]
 
-wcs = WCS(hdu.header)
-
-plt.subplot(111,projection=wcs)
+plt.subplot(111)
 
 positions = np.transpose((star_pos['x_peak'], star_pos['y_peak']))
 
@@ -108,16 +105,17 @@ star_data['corrected_sum_err'] = np.sqrt(total_bkg_err ** 2 + star_data['apertur
 for col in star_data.colnames:
     star_data[col].info.format = '%.8g'
 
-magnitudes = - 2.5 * np.log10(star_data['corrected_sum'] / exp_time)
+magnitudes = - 2.5 * np.log10(star_data['corrected_sum'])
 magnitudes_err = 1 / (star_data['corrected_sum'] ** 2) * star_data['corrected_sum_err']
 
 star_data['magnitudes'] = magnitudes
 star_data['magnitudes_err'] = magnitudes_err
+star_data['star_id'] = star_pos['id']
 
 star_data_df = star_data.to_pandas()
 
-calib_mag_data = float(star_data_df[star_data_df['id'] == calib_id]['magnitudes'])
-calib_mag_data_err = float(star_data_df[star_data_df['id'] == calib_id]['magnitudes_err'])
+calib_mag_data = float(star_data_df[star_data_df['star_id'] == calib_id]['magnitudes'])
+calib_mag_data_err = float(star_data_df[star_data_df['star_id'] == calib_id]['magnitudes_err'])
 
 print(calib_mag_data)
 
@@ -126,7 +124,6 @@ zeropoint_err = np.sqrt(calib_mag_err ** 2 + calib_mag_data_err ** 2)
 
 star_data['magnitudes'] = zeropoint + magnitudes
 star_data['magnitudes_err'] = np.sqrt(magnitudes_err ** 2 + zeropoint_err ** 2)
-star_data['star_id'] = star_pos['id']
 
 
 plt.imshow(section, origin='lower', cmap='Greys', vmin=contrast_range[0], vmax=contrast_range[1], interpolation='nearest') 

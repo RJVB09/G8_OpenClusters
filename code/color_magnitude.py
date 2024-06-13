@@ -31,7 +31,7 @@ mag_R = data_R['magnitudes']
 mag_I = data_I['magnitudes']
 
 plt.subplot(111)
-plt.scatter(mag_G - mag_I, mag_G, s = 1, alpha = 0.5)
+plt.scatter(mag_G - mag_I, mag_G, s = 5, alpha = 0.5, color = '#d95f02')
 plt.gca().invert_yaxis()
 plt.xlabel("G - I")
 plt.ylabel("G")
