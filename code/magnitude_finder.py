@@ -20,9 +20,9 @@ min_y = 0
 max_y = 3900
 
 #Path to dataset containing the pixel coords of the stars
-position_data_path = "code\\member_stars.csv"
+position_data_path = "code\\stars_data_20240307.ecsv"
 #position_data_path = "code\\small_star_dataset.csv"
-magnitude_data_output_path = "code\\magnitudesClusterI.csv"
+magnitude_data_output_path = "code\\magnitudeI.csv"
 fit_data_name = "Master_Light_I60s_20240307.fit"
 
 #Zero point star, zero_point_counts : counts of the zero point star in the image. zero_point_offset :
@@ -37,14 +37,17 @@ base_radius = 15
 
 #Calibration star
 calib_id = 203
-calib_mag = 10.619
+calib_mag = 9.843
 #calib_mag = 9.843
-calib_mag_err = 0.073
+calib_mag_err = 0.069
 #calib_mag_err = 0.069
 
-manual_zeropoint = True
+manual_zeropoint = False
 zeropoint_set = 24.11560598867197
 zeropoint_set_err = 0.06900000000000013
+
+#7.0 or 6.0
+image = 7.0
 
 ##calib_parallax = 5.3669 #milli arcseconds
 #calib_parallax_err = 0.02
@@ -66,7 +69,8 @@ file_loc = Path(__file__).resolve().parent.parent
 loc = PurePath(file_loc,position_data_path)
 output_loc = PurePath(file_loc,magnitude_data_output_path)
 
-star_pos = pd.read_csv(loc, sep=',', comment='#')
+star_pos = pd.read_csv(loc, sep=' ', comment='#')
+star_pos = star_pos[star_pos['img'] == image]
 print(star_pos)
 
 image_file = get_pkg_data_filename(fit_data_name)
