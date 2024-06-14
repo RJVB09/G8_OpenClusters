@@ -35,24 +35,27 @@ dec_corr_07 = -0.004168
 data_stars_07['skycoord_peak.dec'] = data_stars_07['skycoord_peak.dec'] + dec_corr_07
 
 plt.figure(1)
-plt.scatter(data_stars_06['skycoord_peak.ra'],data_stars_06['skycoord_peak.dec'],color='red')
-plt.scatter(data_stars_07['skycoord_peak.ra'],data_stars_07['skycoord_peak.dec'],color='blue')
-plt.scatter(x=data_db['RA_ICRS'], y=data_db['DE_ICRS'], color='purple', alpha=0.8)
-plt.scatter(x=data_goudain['RA_ICRS'], y=data_goudain['DE_ICRS'], color='green', alpha=0.8)
-
+plt.subplot(121)
+plt.scatter(data_stars_06['skycoord_peak.ra'],data_stars_06['skycoord_peak.dec'],color='#b2df8a',marker='*')
+plt.scatter(data_stars_07['skycoord_peak.ra'],data_stars_07['skycoord_peak.dec'],color='#33a02c',marker='*')
+plt.scatter(x=data_db['RA_ICRS'], y=data_db['DE_ICRS'], color='#a6cee3', alpha=0.7,marker='8')
+plt.scatter(x=data_goudain['RA_ICRS'], y=data_goudain['DE_ICRS'], color='#1f78b4', alpha=0.7,marker='8')
+plt.xlabel('RA (degrees)')
+plt.ylabel('DE (arc-hours?)')
+plt.gca().set_aspect('equal')
 positions_06  = data_stars_06[['skycoord_peak.ra', 'skycoord_peak.dec']]
 apertures_06 = CircularAperture(positions_06, r=0.0001197)
-apertures_06.plot(color='red', lw=2, alpha=1)
+apertures_06.plot(color='#b2df8a', lw=2, alpha=1)
 positions_07  = data_stars_07[['skycoord_peak.ra', 'skycoord_peak.dec']]
 apertures_07 = CircularAperture(positions_07, r=0.0001197)
-apertures_07.plot(color='blue', lw=2, alpha=1)
+apertures_07.plot(color='#33a02c', lw=2, alpha=1)
 positions_alf  = data_db[['RA_ICRS', 'DE_ICRS']]
 apertures_alf = CircularAperture(positions_alf, r=1.11*10**(-4))
-apertures_alf.plot(color='purple', lw=2, alpha=1)
+apertures_alf.plot(color='#a6cee3', lw=2, alpha=1)
 positions_goud  = data_goudain[['RA_ICRS', 'DE_ICRS']]
 apertures_goud = CircularAperture(positions_goud, r=1.11*10**(-4))
-apertures_goud.plot(color='green', lw=2, alpha=1)
-
+apertures_goud.plot(color='#1f78b4', lw=2, alpha=1)
+plt.legend(["stars img 06/03", "stars img 07/03", "members Alfonso", "members Goudain"], loc="lower right")
 #for v in data_stars_06[['skycoord_peak.ra', 'skycoord_peak.dec']]:
 ra_search_range = 0.000660*2
 dec_search_range = 0.0001907*2
@@ -118,6 +121,19 @@ apertures_memb.plot(color='black', lw=2, alpha=1)
 
 print(member_stars)
 
+plt.subplot(122)
+plt.scatter(data_stars_06['skycoord_peak.ra'],data_stars_06['skycoord_peak.dec'],color='#b2df8a',marker='*')
+plt.scatter(data_stars_07['skycoord_peak.ra'],data_stars_07['skycoord_peak.dec'],color='#33a02c',marker='*')
+plt.scatter(x=data_db['RA_ICRS'], y=data_db['DE_ICRS'], color='#a6cee3', alpha=0.7,marker='8')
+plt.scatter(x=data_goudain['RA_ICRS'], y=data_goudain['DE_ICRS'], color='#1f78b4', alpha=0.7,marker='8')
+plt.gca().set_aspect('equal')
+plt.ylim(19.4,20.4)
+plt.xlim(129.7,130.4)
+apertures_memb= CircularAperture(positions_memb, r=0.015)
+apertures_memb.plot(color='red', lw=2, alpha=1)
+plt.xlabel('RA (degrees)')
+plt.ylabel('DE (arc-hours?)')
+plt.legend(["stars img 06/03", "stars img 07/03", "members Alfonso", "members Goudain"], loc="lower right")
 #afbeeldingen plotten met member stars
 from astropy.io import fits
 from astropy.utils.data import get_pkg_data_filename
@@ -129,26 +145,31 @@ image_file = get_pkg_data_filename('20240306_data_I.fits')
 hdu = fits.open(image_file)[0]
 wcs = WCS(hdu.header)
 mean, median, std = sigma_clipped_stats(hdu.data, sigma=3.0)
-plt.subplot(211,projection=wcs) 
+plt.subplot(122,projection=wcs) 
 plt.imshow(hdu.data, origin='lower', cmap='Greys', vmin=median, vmax=median+5*std, interpolation='nearest') 
-
 pixel_coords = wcs.wcs_world2pix(member_stars[['skycoord_peak.ra', 'skycoord_peak.dec']].values, 1)
 
 member_stars['x_pixel'] = pixel_coords[:, 0]
 member_stars['y_pixel'] = pixel_coords[:, 1]
-plt.scatter(member_stars['x_pixel'], member_stars['y_pixel'], facecolors='none', edgecolors='r', s=5)
+plt.scatter(member_stars['x_pixel'], member_stars['y_pixel'], facecolors='none', edgecolors='r', s=30)
+plt.tick_params(axis='x', which='both', labelbottom=True, labeltop=False)
+plt.tick_params(axis='y', which='both', labelbottom=True, labeltop=False)
+plt.xlim(0,4100)
 
 image_file2 = get_pkg_data_filename('20240307_data_I.fits')
 hdu2 = fits.open(image_file2)[0]
 wcs2 = WCS(hdu2.header)
 mean2, median2, std2 = sigma_clipped_stats(hdu2.data, sigma=3.0)
-plt.subplot(212,projection=wcs2) 
+plt.subplot(121,projection=wcs2) 
 plt.imshow(hdu2.data, origin='lower', cmap='Greys', vmin=median2, vmax=median2+5*std2, interpolation='nearest') 
 
 pixel_coords = wcs2.wcs_world2pix(member_stars[['skycoord_peak.ra', 'skycoord_peak.dec']].values, 1)
 member_stars['x_pixel'] = pixel_coords[:, 0]
 member_stars['y_pixel'] = pixel_coords[:, 1]
-plt.scatter(member_stars['x_pixel'], member_stars['y_pixel'], facecolors='none', edgecolors='r', s=5)
+plt.scatter(member_stars['x_pixel'], member_stars['y_pixel'], facecolors='none', edgecolors='r', s=30)
+plt.tick_params(axis='x', which='both', labelbottom=True, labeltop=False)
+plt.tick_params(axis='y', which='both', labelbottom=True, labeltop=False)
+plt.xlim(0,4100)
 
 #member_stars.to_csv('member_stars.csv') #file maken met data
 plt.show()
