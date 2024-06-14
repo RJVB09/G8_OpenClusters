@@ -16,22 +16,33 @@ from acstools import acszpt
 magnitude_data_output_path_g = "code\\magnitudesG.csv"
 magnitude_data_output_path_r = "code\\magnitudesR.csv"
 magnitude_data_output_path_i = "code\\magnitudesI.csv"
+magnitude_data_output_path_gc = "code\\magnitudesClusterG.csv"
+magnitude_data_output_path_ic = "code\\magnitudesClusterI.csv"
 
 file_loc = Path(__file__).resolve().parent.parent
 locG = PurePath(file_loc,magnitude_data_output_path_g)
 locR = PurePath(file_loc,magnitude_data_output_path_r)
 locI = PurePath(file_loc,magnitude_data_output_path_i)
+locGC = PurePath(file_loc,magnitude_data_output_path_gc)
+locIC = PurePath(file_loc,magnitude_data_output_path_ic)
 
 data_G = pd.read_csv(locG, sep=',', comment='#')
 data_R = pd.read_csv(locR, sep=',', comment='#')
 data_I = pd.read_csv(locI, sep=',', comment='#')
+data_GC = pd.read_csv(locGC, sep=',', comment='#')
+data_IC = pd.read_csv(locIC, sep=',', comment='#')
 
 mag_G = data_G['magnitudes']
 mag_R = data_R['magnitudes']
 mag_I = data_I['magnitudes']
+mag_IC = data_IC['magnitudes']
+mag_GC = data_GC['magnitudes']
 
 plt.subplot(111)
-plt.scatter(mag_G - mag_I, mag_G, s = 5, alpha = 0.5, color = '#d95f02')
+plt.title('Color-magnitude diagram M44')
+#plt.scatter(mag_G - mag_I, mag_G, s = 7, alpha = 1, color = '#7570b3', label='Non-cluster stars')
+plt.scatter(mag_GC - mag_IC, mag_GC, s = 7, alpha = 1, color = '#d95f02', label='Stars of M44')
+plt.legend()
 plt.gca().invert_yaxis()
 plt.xlabel("G - I")
 plt.ylabel("G")
