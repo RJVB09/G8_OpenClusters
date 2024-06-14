@@ -175,11 +175,11 @@ member_stars['y_pixel'] = pixel_coords[:, 1]
 plt.scatter(member_stars['x_pixel'], member_stars['y_pixel'], facecolors='none', edgecolors='r', s=30)
 plt.tick_params(axis='x', which='both', labelbottom=True, labeltop=False)
 plt.tick_params(axis='y', which='both', labelbottom=True, labeltop=False)
-#plt.xlim(0,4100)
+plt.xlim(0,4100)
 for index, row in member_stars.iterrows():
     plt.text(row['x_pixel'], row['y_pixel'], int(row['id']), color='r', fontsize='medium')
 
-member_stars.to_csv('member_stars.csv') #file maken met data
+#member_stars.to_csv('member_stars.csv') #file maken met data
 
 plt.figure(3)
 plt.scatter(member_stars['x_pixel'], member_stars['y_pixel'],facecolors='red', s=5)
