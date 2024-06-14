@@ -20,19 +20,14 @@ min_y = 0
 max_y = 3900
 
 #Path to dataset containing the pixel coords of the stars
-position_data_path = "code\\stars_data_20240307.ecsv"
+position_data_path = "code\\member_stars.csv"
 #position_data_path = "code\\small_star_dataset.csv"
-magnitude_data_output_path = "code\\magnitudesI.csv"
+magnitude_data_output_path = "code\\magnitudesClusterI.csv"
 fit_data_name = "Master_Light_I60s_20240307.fit"
 
 #Zero point star, zero_point_counts : counts of the zero point star in the image. zero_point_offset :
 #zero_point_counts = 10000
 #zero_point_offset = 1
-
-#Header data
-date = '2023-03-07'
-instrument = 'WFC' #!
-filter = 'F775W' #!
 
 #contrast_range = [150.99, 202.11]
 contrast_range = [493.14,606.94]
@@ -45,7 +40,11 @@ calib_id = 203
 calib_mag = 10.619
 #calib_mag = 9.843
 calib_mag_err = 0.073
+#calib_mag_err = 0.069
 
+manual_zeropoint = True
+zeropoint_set = 24.11560598867197
+zeropoint_set_err = 0.06900000000000013
 
 ##calib_parallax = 5.3669 #milli arcseconds
 #calib_parallax_err = 0.02
@@ -67,7 +66,7 @@ file_loc = Path(__file__).resolve().parent.parent
 loc = PurePath(file_loc,position_data_path)
 output_loc = PurePath(file_loc,magnitude_data_output_path)
 
-star_pos = pd.read_csv(loc, sep=' ', comment='#')
+star_pos = pd.read_csv(loc, sep=',', comment='#')
 print(star_pos)
 
 image_file = get_pkg_data_filename(fit_data_name)
@@ -114,13 +113,19 @@ star_data['star_id'] = star_pos['id']
 
 star_data_df = star_data.to_pandas()
 
-calib_mag_data = float(star_data_df[star_data_df['star_id'] == calib_id]['magnitudes'])
-calib_mag_data_err = float(star_data_df[star_data_df['star_id'] == calib_id]['magnitudes_err'])
+#print(calib_mag_data)
 
-print(calib_mag_data)
+zeropoint = 0
+zeropoint_err = 0
 
-zeropoint = calib_mag - calib_mag_data
-zeropoint_err = np.sqrt(calib_mag_err ** 2 + calib_mag_data_err ** 2)
+if manual_zeropoint:
+    zeropoint = zeropoint_set
+    zeropoint_err = zeropoint_set_err
+else:
+    calib_mag_data = float(star_data_df[star_data_df['star_id'] == calib_id]['magnitudes'])
+    calib_mag_data_err = float(star_data_df[star_data_df['star_id'] == calib_id]['magnitudes_err'])
+    zeropoint = calib_mag - calib_mag_data
+    zeropoint_err = np.sqrt(calib_mag_err ** 2 + calib_mag_data_err ** 2)
 
 star_data['magnitudes'] = zeropoint + magnitudes
 star_data['magnitudes_err'] = np.sqrt(magnitudes_err ** 2 + zeropoint_err ** 2)
@@ -138,5 +143,9 @@ plt.show()
 """
 star_data.pprint()
 star_data.to_pandas().to_csv(output_loc)
+print('zeropoint : ', zeropoint)
+print('zeropoint_err : ', zeropoint_err)
+
+
 
 
