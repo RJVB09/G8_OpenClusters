@@ -115,9 +115,15 @@ member_stars_07_alf = db_verg(data_stars_07, data_db)
 member_stars_06_goud = db_verg(data_stars_06, data_goudain)
 member_stars_07_goud = db_verg(data_stars_07, data_goudain)
 member_stars = pd.concat([member_stars_06_alf, member_stars_07_alf, member_stars_06_goud, member_stars_07_goud], ignore_index=True)
+member_stars = member_stars.drop_duplicates(subset=['skycoord_peak.ra', 'skycoord_peak.dec'], keep='first', ignore_index=True) #haalt duplicates er uit
 positions_memb = member_stars[['skycoord_peak.ra', 'skycoord_peak.dec']]
 apertures_memb= CircularAperture(positions_memb, r=0.005)
 apertures_memb.plot(color='black', lw=2, alpha=1)
+
+#meer duplicates
+duplicates = member_stars[(member_stars['id'] == 516) | (member_stars['id'] == 493) | (member_stars['id'] == 351) | (member_stars['id'] == 317) | (member_stars['id'] == 112) | (member_stars['id'] == 153) | (member_stars['id'] == 9) | (member_stars['id'] == 27)]
+member_stars = pd.concat([member_stars, duplicates[duplicates['img']==7], duplicates[duplicates['img']==7]]).drop_duplicates(keep=False)
+duplicates2 = member_stars[(member_stars['id'] == 516) | (member_stars['id'] == 493) | (member_stars['id'] == 351) | (member_stars['id'] == 317) | (member_stars['id'] == 112) | (member_stars['id'] == 153) | (member_stars['id'] == 9) | (member_stars['id'] == 27)]
 
 print(member_stars)
 
@@ -127,7 +133,7 @@ plt.scatter(data_stars_07['skycoord_peak.ra'],data_stars_07['skycoord_peak.dec']
 plt.scatter(x=data_db['RA_ICRS'], y=data_db['DE_ICRS'], color='#a6cee3', alpha=0.7,marker='8')
 plt.scatter(x=data_goudain['RA_ICRS'], y=data_goudain['DE_ICRS'], color='#1f78b4', alpha=0.7,marker='8')
 plt.gca().set_aspect('equal')
-plt.ylim(19.4,20.4)
+plt.ylim(19.3,20.4)
 plt.xlim(129.7,130.4)
 apertures_memb= CircularAperture(positions_memb, r=0.015)
 apertures_memb.plot(color='red', lw=2, alpha=1)
@@ -169,7 +175,15 @@ member_stars['y_pixel'] = pixel_coords[:, 1]
 plt.scatter(member_stars['x_pixel'], member_stars['y_pixel'], facecolors='none', edgecolors='r', s=30)
 plt.tick_params(axis='x', which='both', labelbottom=True, labeltop=False)
 plt.tick_params(axis='y', which='both', labelbottom=True, labeltop=False)
-plt.xlim(0,4100)
+#plt.xlim(0,4100)
+for index, row in member_stars.iterrows():
+    plt.text(row['x_pixel'], row['y_pixel'], int(row['id']), color='r', fontsize='medium')
 
-#member_stars.to_csv('member_stars.csv') #file maken met data
+member_stars.to_csv('member_stars.csv') #file maken met data
+
+plt.figure(3)
+plt.scatter(member_stars['x_pixel'], member_stars['y_pixel'],facecolors='red', s=5)
+for index, row in member_stars.iterrows():
+    plt.text(row['x_pixel'], row['y_pixel'], int(row['id']), color='r', fontsize='medium')
+
 plt.show()
