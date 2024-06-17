@@ -42,15 +42,20 @@ mag_RC = data_RC['magnitudes']
 mag_GC = data_GC['magnitudes']
 
 # isochroon
-iso_loc = PurePath(file_loc,"code\\isochrone_test.txt")
-data_iso = pd.read_csv(iso_loc, sep='\t', comment='#')
+iso_loc = PurePath(file_loc,"code\\output588187507427.dat")
+data_iso = pd.read_csv(iso_loc, delim_whitespace=True, comment='#')
+print(data_iso)
 print(data_iso.columns)
+mag_corr = 7
+iso_mag_G = data_iso['gmag'] +mag_corr
+iso_mag_I = data_iso['imag'] +mag_corr
 
 
 plt.subplot(111)
 plt.title('Color-magnitude diagram M44')
-plt.scatter(mag_G - mag_I, mag_G, s = 7, alpha = 1, color = '#7570b3', label='Non-cluster stars')
-plt.scatter(mag_GC - mag_IC, mag_GC, s = 7, alpha = 1, color = '#d95f02', label='Stars of M44')
+#plt.scatter(mag_G - mag_I, mag_G, s = 7, alpha = 1, color = '#7570b3', label='Non-cluster stars')
+plt.scatter(iso_mag_G-iso_mag_I, iso_mag_I, s=3, alpha = 0.3, c='green', marker='*')
+plt.scatter(mag_GC - mag_IC, mag_GC, s = 10, alpha = 1, color = '#d95f02', label='Stars of M44')
 plt.legend()
 plt.gca().invert_yaxis()
 plt.xlabel("G - I")
