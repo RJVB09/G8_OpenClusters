@@ -13,12 +13,12 @@ from photutils.aperture import CircularAperture, CircularAnnulus, ApertureStats,
 from photutils.detection import find_peaks
 from acstools import acszpt
 
-magnitude_data_output_path_g = "code\\magnitudesG.csv"
-magnitude_data_output_path_r = "code\\magnitudesR.csv"
-magnitude_data_output_path_i = "code\\magnitudesI.csv"
-magnitude_data_output_path_gc = "code\\magnitudeClusterG.csv"
-magnitude_data_output_path_rc = "code\\magnitudeClusterR.csv"
-magnitude_data_output_path_ic = "code\\magnitudeClusterI.csv"
+magnitude_data_output_path_g = "code\\magnitudeG.csv"
+magnitude_data_output_path_r = "code\\magnitudeR.csv"
+magnitude_data_output_path_i = "code\\magnitudeI.csv"
+magnitude_data_output_path_gc = "code\\magnitudeGC.csv"
+magnitude_data_output_path_rc = "code\\magnitudeRC.csv"
+magnitude_data_output_path_ic = "code\\magnitudeIC.csv"
 
 file_loc = Path(__file__).resolve().parent.parent
 locG = PurePath(file_loc,magnitude_data_output_path_g)
@@ -43,12 +43,12 @@ mag_RC = data_RC['magnitudes']
 mag_GC = data_GC['magnitudes']
 
 plt.subplot(111)
-plt.title('Color-color diagram M44')
-plt.scatter(mag_G - mag_I, mag_G - mag_R, s = 7, alpha = 1, color = '#7570b3', label='Non-cluster stars')
-plt.scatter(mag_GC - mag_IC, mag_GC - mag_RC, s = 7, alpha = 1, color = '#d95f02', label='Stars of M44')
+plt.title('Color-magnitude diagram M44')
+plt.scatter(mag_G - mag_I, mag_G, s = 7, alpha = 1, color = '#7570b3', label='Non-cluster stars')
+plt.scatter(mag_GC - mag_IC, mag_GC, s = 7, alpha = 1, color = '#d95f02', label='Stars of M44')
 plt.legend()
 plt.gca().invert_yaxis()
 plt.xlabel("G - I")
-plt.ylabel("G - R")
+plt.ylabel("G")
 plt.show()
 
