@@ -24,7 +24,7 @@ max_y = 3900
 #zero_point_offset = 1
 
 #contrast_range = [150.99, 202.11]
-contrast_range = [493.14,606.94]
+contrast_range = [127.9,217.24]
 
 #Aperture radius
 base_radius = 15
@@ -37,19 +37,22 @@ manual_zeropoint = True
 #https://simbad.cds.unistra.fr/simbad/sim-id?Ident=%401108429&Name=BD%2b20%20%202151&submit=submit
 
 
-def get_magnitude(image_id, overexposed, zeropoint, zeropoint_err, calib_id, calib_mag, calib_mag_err, manual_zeropoint, fit, input_stars, output_magnitudes):
+def get_magnitude(image_id, overexposed, zeropoint, zeropoint_err, calib_id, calib_mag, calib_mag_err, manual_zeropoint, fit, input_stars):
 
     file_loc = Path(__file__).resolve().parent.parent
     loc = PurePath(file_loc,input_stars)
-    output_loc = PurePath(file_loc,output_magnitudes)
 
     star_pos = pd.read_csv(loc, sep=',', comment='#')
     star_pos = star_pos[star_pos['img'] == image_id]
-    print(star_pos)
+    star_pos = star_pos[(star_pos['ob'] == overexposed) | (star_pos['id'].isin(calib_id))]
 
-    image_file = get_pkg_data_filename(fit)
+    image_file = PurePath(file_loc, f"science_frames\\aligned\\{fit}")
     hdu = fits.open(image_file)[0]
-    section = hdu.data[min_y:max_y,min_x:max_x]
+
+    section = hdu.data[0:4096,0:4096]
+
+    if image_id == 7.0:
+        section = hdu.data[min_y:max_y,min_x:max_x]
 
     plt.subplot(111)
 
@@ -88,31 +91,100 @@ def get_magnitude(image_id, overexposed, zeropoint, zeropoint_err, calib_id, cal
     star_data['magnitudes'] = magnitudes
     star_data['magnitudes_err'] = magnitudes_err
     star_data['star_id'] = star_pos['id']
+    if 'plx' in star_pos:
+        star_data['plx'] = star_pos['plx']
 
     star_data_df = star_data.to_pandas()
 
     #print(calib_mag_data)
 
     if not manual_zeropoint:
-        calib_mag_data = float(star_data_df[star_data_df['star_id'] == calib_id]['magnitudes'])
-        calib_mag_data_err = float(star_data_df[star_data_df['star_id'] == calib_id]['magnitudes_err'])
-        zeropoint = calib_mag - calib_mag_data
-        zeropoint_err = np.sqrt(calib_mag_err ** 2 + calib_mag_data_err ** 2)
+        average_zpt = 0
+        for i in range(len(calib_id)):
+            calib_mag_data = float(star_data_df[star_data_df['star_id'] == calib_id[i]]['magnitudes'])
+            calib_mag_data_err = float(star_data_df[star_data_df['star_id'] == calib_id[i]]['magnitudes_err'])
+            average_zpt += calib_mag[i] - calib_mag_data
+            zeropoint_err += calib_mag_err[i] ** 2 + calib_mag_data_err ** 2
+
+        zeropoint = average_zpt / len(calib_id)
+        zeropoint_err = np.sqrt(zeropoint_err) / len(calib_id)
 
     star_data['magnitudes'] = zeropoint + magnitudes
     star_data['magnitudes_err'] = np.sqrt(magnitudes_err ** 2 + zeropoint_err ** 2)
 
 
-    plt.imshow(section, origin='lower', cmap='Greys', vmin=contrast_range[0], vmax=contrast_range[1], interpolation='nearest') 
+    #plt.imshow(section, origin='lower', cmap='Greys', vmin=contrast_range[0], vmax=contrast_range[1], interpolation='nearest') 
 
-    plt.show()
+    #plt.show()
 
     star_data.pprint()
-    star_data.to_pandas().to_csv(output_loc)
+
+    star_data_df = star_data.to_pandas()
+
     print('zeropoint : ', zeropoint)
     print('zeropoint_err : ', zeropoint_err)
-    return zeropoint, zeropoint_err
+    return zeropoint, zeropoint_err, star_data_df
 
-get_magnitude(7.0, 0, 25.212015560856376, 0.0730000000000001, 203, 10.619, 0.073, True, "Master_Light_G60s_20240307.fit", "code\\member_stars.csv", "code\\magnitudeGC.csv")
+def dataframes_save(dataframes, path):
+    combined = pd.concat(dataframes, axis=0)
+    file_loc = Path(__file__).resolve().parent.parent
+    output_loc = PurePath(file_loc,path)
+    combined.to_csv(output_loc)
+
+#https://simbad.cds.unistra.fr/simbad/sim-id?Ident=%401108429&Name=BD%2b20%20%202151&submit=submit
+calib_id_7 = [203]
+calib_magGRI_7 = [[10.619],[10.032],[9.843]]
+calib_magGRI_7_err = [[0.073],[0.054],[0.069]]
 
 
+#https://simbad.cds.unistra.fr/simbad/sim-id?Ident=%401109963&Name=BD%2b20%20%202170&submit=submit
+#https://simbad.cds.unistra.fr/simbad/sim-id?Ident=%4011682158&Name=BD%2b20%20%202160&submit=submit
+#https://simbad.cds.unistra.fr/simbad/sim-id?Ident=%401110935&Name=Cl*%20NGC%202632%20%20%20%20%20%20S%20%20%20%20%20106&submit=submit
+calib_id_6 = [281,224,198]
+calib_magGRI_6 = [[13.643,13.962,11.991],[13.393,13.504,11.718],[13.184,13.290,11.664]]
+calib_magGRI_6_err = [[0.01,0.009,0.001],[0.011,0.01,0.001],[0.012,0.012,0.001]]
+
+mag_g_o0_i7_c0 = get_magnitude(7.0, 0, 0, 0, calib_id_7, calib_magGRI_7[0], calib_magGRI_7_err[0], False, "Master_Light_G60s_20240307.fit", "code\\stars_data_20240307.csv")
+mag_r_o0_i7_c0 = get_magnitude(7.0, 0, 0, 0, calib_id_7, calib_magGRI_7[1], calib_magGRI_7_err[1], False, "Master_Light_R60s_20240307.fit", "code\\stars_data_20240307.csv")
+mag_i_o0_i7_c0 = get_magnitude(7.0, 0, 0, 0, calib_id_7, calib_magGRI_7[2], calib_magGRI_7_err[2], False, "Master_Light_I60s_20240307.fit", "code\\stars_data_20240307.csv")
+
+mag_g_o1_i7_c0 = get_magnitude(7.0, 1, 0, 0, calib_id_7, calib_magGRI_7[0], calib_magGRI_7_err[0], False, "Master_Light_G4s_20240307.fit", "code\\stars_data_20240307.csv")
+mag_r_o1_i7_c0 = get_magnitude(7.0, 1, 0, 0, calib_id_7, calib_magGRI_7[1], calib_magGRI_7_err[1], False, "Master_Light_R4s_20240307.fit", "code\\stars_data_20240307.csv")
+mag_i_o1_i7_c0 = get_magnitude(7.0, 1, 0, 0, calib_id_7, calib_magGRI_7[2], calib_magGRI_7_err[2], False, "Master_Light_I5s_20240307.fit", "code\\stars_data_20240307.csv")
+
+mag_g_o0_i6_c0 = get_magnitude(6.0, 0, 0, 0, calib_id_6, calib_magGRI_6[0], calib_magGRI_6_err[0], False, "Master_Light_G60s_20240306.fit", "code\\stars_data_20240306.csv")
+mag_r_o0_i6_c0 = get_magnitude(6.0, 0, 0, 0, calib_id_6, calib_magGRI_6[1], calib_magGRI_6_err[1], False, "Master_Light_R60s_20240306.fit", "code\\stars_data_20240306.csv")
+mag_i_o0_i6_c0 = get_magnitude(6.0, 0, 0, 0, calib_id_6, calib_magGRI_6[2], calib_magGRI_6_err[2], False, "Master_Light_I60s_20240306.fit", "code\\stars_data_20240306.csv")
+
+mag_g_o1_i6_c0 = get_magnitude(6.0, 1, 0, 0, calib_id_6, calib_magGRI_6[0], calib_magGRI_6_err[0], False, "Master_Light_G5s_20240306.fit", "code\\stars_data_20240306.csv")
+mag_r_o1_i6_c0 = get_magnitude(6.0, 1, 0, 0, calib_id_6, calib_magGRI_6[1], calib_magGRI_6_err[1], False, "Master_Light_R4s_20240306.fit", "code\\stars_data_20240306.csv")
+mag_i_o1_i6_c0 = get_magnitude(6.0, 1, 0, 0, calib_id_6, calib_magGRI_6[2], calib_magGRI_6_err[2], False, "Master_Light_I5s_20240306.fit", "code\\stars_data_20240306.csv")
+
+dataframes_save([mag_g_o0_i7_c0[2], mag_g_o1_i7_c0[2], mag_g_o0_i6_c0[2], mag_g_o1_i6_c0[2]],"code\\magnitude_data\\magnitudesG.csv")
+dataframes_save([mag_r_o0_i7_c0[2], mag_r_o1_i7_c0[2], mag_r_o0_i6_c0[2], mag_r_o1_i6_c0[2]],"code\\magnitude_data\\magnitudesR.csv")
+dataframes_save([mag_i_o0_i7_c0[2], mag_i_o1_i7_c0[2], mag_i_o0_i6_c0[2], mag_i_o1_i6_c0[2]],"code\\magnitude_data\\magnitudesI.csv")
+
+#get_magnitude(7.0, 0, 25.212015560856376, 0.0730000000000001, 203, 10.619, 0.073, True, "Master_Light_G60s_20240307.fit", "code\\member_stars.csv", "code\\magnitudeGC.csv")
+
+
+# CLUSTER STARS
+
+mag_g_o0_i7_c1 = get_magnitude(7.0, 0, mag_g_o0_i7_c0[0], mag_g_o0_i7_c0[1], [], [], [], True, "Master_Light_G60s_20240307.fit", "code\\member_stars.csv")
+mag_r_o0_i7_c1 = get_magnitude(7.0, 0, mag_r_o0_i7_c0[0], mag_r_o0_i7_c0[1], [], [], [], True, "Master_Light_R60s_20240307.fit", "code\\member_stars.csv")
+mag_i_o0_i7_c1 = get_magnitude(7.0, 0, mag_i_o0_i7_c0[0], mag_i_o0_i7_c0[1], [], [], [], True, "Master_Light_I60s_20240307.fit", "code\\member_stars.csv")
+
+mag_g_o1_i7_c1 = get_magnitude(7.0, 1, mag_g_o1_i7_c0[0], mag_g_o1_i7_c0[1], [], [], [], True, "Master_Light_G4s_20240307.fit", "code\\member_stars.csv")
+mag_r_o1_i7_c1 = get_magnitude(7.0, 1, mag_r_o1_i7_c0[0], mag_r_o1_i7_c0[1], [], [], [], True, "Master_Light_R4s_20240307.fit", "code\\member_stars.csv")
+mag_i_o1_i7_c1 = get_magnitude(7.0, 1, mag_i_o1_i7_c0[0], mag_i_o1_i7_c0[1], [], [], [], True, "Master_Light_I5s_20240307.fit", "code\\member_stars.csv")
+
+mag_g_o0_i6_c1 = get_magnitude(6.0, 0, mag_g_o0_i6_c0[0], mag_g_o0_i6_c0[1], [], [], [], True, "Master_Light_G60s_20240306.fit", "code\\member_stars.csv")
+mag_r_o0_i6_c1 = get_magnitude(6.0, 0, mag_r_o0_i6_c0[0], mag_r_o0_i6_c0[1], [], [], [], True, "Master_Light_R60s_20240306.fit", "code\\member_stars.csv")
+mag_i_o0_i6_c1 = get_magnitude(6.0, 0, mag_i_o0_i6_c0[0], mag_i_o0_i6_c0[1], [], [], [], True, "Master_Light_I60s_20240306.fit", "code\\member_stars.csv")
+
+mag_g_o1_i6_c1 = get_magnitude(6.0, 1, mag_g_o1_i6_c0[0], mag_g_o1_i6_c0[1], [], [], [], True, "Master_Light_G5s_20240306.fit", "code\\member_stars.csv")
+mag_r_o1_i6_c1 = get_magnitude(6.0, 1, mag_r_o1_i6_c0[0], mag_r_o1_i6_c0[1], [], [], [], True, "Master_Light_R4s_20240306.fit", "code\\member_stars.csv")
+mag_i_o1_i6_c1 = get_magnitude(6.0, 1, mag_i_o1_i6_c0[0], mag_i_o1_i6_c0[1], [], [], [], True, "Master_Light_I5s_20240306.fit", "code\\member_stars.csv")
+
+dataframes_save([mag_g_o0_i7_c1[2], mag_g_o1_i7_c1[2], mag_g_o0_i6_c1[2], mag_g_o1_i6_c1[2]],"code\\magnitude_data\\magnitudesClusterG.csv")
+dataframes_save([mag_r_o0_i7_c1[2], mag_r_o1_i7_c1[2], mag_r_o0_i6_c1[2], mag_r_o1_i6_c1[2]],"code\\magnitude_data\\magnitudesClusterR.csv")
+dataframes_save([mag_i_o0_i7_c1[2], mag_i_o1_i7_c1[2], mag_i_o0_i6_c1[2], mag_i_o1_i6_c1[2]],"code\\magnitude_data\\magnitudesClusterI.csv")
