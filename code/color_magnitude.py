@@ -11,7 +11,6 @@ from astropy.stats import sigma_clipped_stats
 from photutils.detection import DAOStarFinder
 from photutils.aperture import CircularAperture, CircularAnnulus, ApertureStats,aperture_photometry
 from photutils.detection import find_peaks
-from acstools import acszpt
 
 magnitude_data_output_path_g = "code\\magnitudeG.csv"
 magnitude_data_output_path_r = "code\\magnitudeR.csv"
@@ -41,6 +40,12 @@ mag_I = data_I['magnitudes']
 mag_IC = data_IC['magnitudes']
 mag_RC = data_RC['magnitudes']
 mag_GC = data_GC['magnitudes']
+
+# isochroon
+iso_loc = PurePath(file_loc,"code\\isochrone_test.txt")
+data_iso = pd.read_csv(iso_loc, sep='\t', comment='#')
+print(data_iso.columns)
+
 
 plt.subplot(111)
 plt.title('Color-magnitude diagram M44')
