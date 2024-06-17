@@ -70,7 +70,14 @@ tbl1_2['id'] = np.arange(len(tbl1_2))+len(tbl)
 tbl1_2['img'] = '06'
 for id in range(len(tbl1_2)):
     tbl.add_row(tbl1_2[id])
+    
+overbelichte_sterren = [498, 279, 525, 281, 533, 534, 530, 527, 480, 389, 531, 532, 270, 529, 528, 526, 80]
+tbl['OB'] = np.isin(tbl['id'], overbelichte_sterren).astype(int)
 print(tbl)
+
+for row in tbl:
+    plt.text(int(row['x_peak']), int(row['y_peak']), int(row['id']), color='r', fontsize='medium')
+
 plt.show()
 
 #csv file maken, alleen uncommenten als het nodig is :)

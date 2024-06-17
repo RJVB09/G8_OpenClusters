@@ -83,6 +83,7 @@ def db_verg(df, df_db):
     peak_value = df['peak_value'].values
     id = df['id'].values
     img = df['img'].values
+    ob = df['OB'].values
     
 
     ra_diff = np.abs(ra_stars[:, None] - ra_db)
@@ -99,6 +100,7 @@ def db_verg(df, df_db):
     matched_peak_val = peak_value[matched_indices]
     matched_id = id[matched_indices]
     matched_img = img[matched_indices]
+    matched_ob = ob[matched_indices]
     
     matched_plx = []
     for i, star_match in enumerate(matches):
@@ -107,8 +109,8 @@ def db_verg(df, df_db):
             matched_plx.append(plx[db_index])
 
     # Create the resulting DataFrame
-    members_array = np.column_stack((matched_ra, matched_dec, matched_x, matched_y, matched_peak_val, matched_id, matched_plx, matched_img))
-    return pd.DataFrame(data=members_array, columns=['skycoord_peak.ra', 'skycoord_peak.dec', 'x_peak', 'y_peak', 'peak_value', 'id', 'plx', 'img'])
+    members_array = np.column_stack((matched_ra, matched_dec, matched_x, matched_y, matched_peak_val, matched_id, matched_plx, matched_img, matched_ob))
+    return pd.DataFrame(data=members_array, columns=['skycoord_peak.ra', 'skycoord_peak.dec', 'x_peak', 'y_peak', 'peak_value', 'id', 'plx', 'img', 'ob'])
 
 member_stars_06_alf = db_verg(data_stars_06, data_db)
 member_stars_07_alf = db_verg(data_stars_07, data_db)
@@ -175,15 +177,14 @@ member_stars['y_pixel'] = pixel_coords[:, 1]
 plt.scatter(member_stars['x_pixel'], member_stars['y_pixel'], facecolors='none', edgecolors='r', s=30)
 plt.tick_params(axis='x', which='both', labelbottom=True, labeltop=False)
 plt.tick_params(axis='y', which='both', labelbottom=True, labeltop=False)
-#plt.xlim(0,4100)
+plt.xlim(0,4100)
 for index, row in member_stars.iterrows():
     plt.text(row['x_pixel'], row['y_pixel'], int(row['id']), color='r', fontsize='medium')
-
-member_stars.to_csv('member_stars.csv') #file maken met data
 
 plt.figure(3)
 plt.scatter(member_stars['x_pixel'], member_stars['y_pixel'],facecolors='red', s=5)
 for index, row in member_stars.iterrows():
     plt.text(row['x_pixel'], row['y_pixel'], int(row['id']), color='r', fontsize='medium')
 
+#member_stars.to_csv('member_stars.csv') #file maken met data
 plt.show()

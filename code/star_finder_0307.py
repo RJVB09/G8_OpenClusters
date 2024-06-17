@@ -63,8 +63,17 @@ tbl1_2['id'] = np.arange(len(tbl1_2))+len(tbl)
 tbl1_2['img'] = '07'
 for id in range(len(tbl1_2)):
     tbl.add_row(tbl1_2[id])
+
+overbelichte_sterren = [468, 342, 218, 106, 30, 540, 542, 539, 471, 541]
+tbl['OB'] = np.isin(tbl['id'], overbelichte_sterren).astype(int)
 print(tbl)
+
+for row in tbl:
+    plt.text(int(row['x_peak']), int(row['y_peak']), int(row['id']), color='r', fontsize='medium')
+
 plt.show()
+
+
 
 #csv file maken, alleen uncommenten als het nodig is :)
 #tbl.write('stars_data_20240307.ecsv', overwrite=True) #file maken met data
