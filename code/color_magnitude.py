@@ -12,12 +12,12 @@ from photutils.detection import DAOStarFinder
 from photutils.aperture import CircularAperture, CircularAnnulus, ApertureStats,aperture_photometry
 from photutils.detection import find_peaks
 
-magnitude_data_output_path_g = "code\\magnitudeG.csv"
-magnitude_data_output_path_r = "code\\magnitudeR.csv"
-magnitude_data_output_path_i = "code\\magnitudeI.csv"
-magnitude_data_output_path_gc = "code\\magnitudeGC.csv"
-magnitude_data_output_path_rc = "code\\magnitudeRC.csv"
-magnitude_data_output_path_ic = "code\\magnitudeIC.csv"
+magnitude_data_output_path_g = "code\\magnitude_data\\magnitudesG.csv"
+magnitude_data_output_path_r = "code\\magnitude_data\\magnitudesR.csv"
+magnitude_data_output_path_i = "code\\magnitude_data\\magnitudesI.csv"
+magnitude_data_output_path_gc = "code\\magnitude_data\\magnitudesClusterG.csv"
+magnitude_data_output_path_rc = "code\\magnitude_data\\magnitudesClusterR.csv"
+magnitude_data_output_path_ic = "code\\magnitude_data\\magnitudesClusterI.csv"
 
 file_loc = Path(__file__).resolve().parent.parent
 locG = PurePath(file_loc,magnitude_data_output_path_g)
