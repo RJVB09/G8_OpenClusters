@@ -71,7 +71,7 @@ iso_mag_I_corr = data_iso_corr['imag']
 
 
 
-""" plt.subplot(111)
+plt.subplot(111)
 plt.title('Color-magnitude diagram M44')
 #plt.scatter(mag_G - mag_I, mag_G, s = 7, alpha = 1, color = '#7570b3', label='Non-cluster stars')
 plt.scatter(iso_mag_G_8-iso_mag_I_8, iso_mag_G_8, s=10, alpha = 0.5, c='green', marker='o', label='isochrone 100 MY')
@@ -85,14 +85,22 @@ plt.gca().invert_yaxis()
 plt.xlabel("G - I")
 plt.ylabel("G")
 plt.show()
- """
+
 
 plt.title('Color-color diagram M44')
 #plt.scatter(mag_G - mag_I, mag_G, s = 10, alpha = 1, color = '#7570b3', label='Background stars')
 plt.scatter(mag_GC - mag_IC, mag_GC - mag_RC, s = 10, alpha = 1, color = '#d95f02', label='Stars of M44')
 plt.legend()
 plt.gca().invert_yaxis()
-plt.xlabel("G - I")
-plt.ylabel("G - R")
+plt.xlabel("g - i")
+plt.ylabel("g - r")
+plt.show()
+
+plt.title('Color-color diagram M44')
+#plt.scatter(mag_G - mag_I, mag_G, s = 10, alpha = 1, color = '#7570b3', label='Background stars')
+plt.scatter(0.98*(mag_GC - mag_RC) + 0.22, 1.09*(mag_RC - mag_IC) + 0.22, s = 10, alpha = 1, color = '#d95f02', label='Stars of M44')
+plt.legend()
+plt.xlabel("B - V")
+plt.ylabel("V - R")
 plt.show()
 

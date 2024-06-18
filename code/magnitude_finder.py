@@ -140,9 +140,9 @@ calib_magGRI_7_err = [[0.073],[0.054],[0.069]]
 #https://simbad.cds.unistra.fr/simbad/sim-id?Ident=%401109963&Name=BD%2b20%20%202170&submit=submit
 #https://simbad.cds.unistra.fr/simbad/sim-id?Ident=%4011682158&Name=BD%2b20%20%202160&submit=submit
 #https://simbad.cds.unistra.fr/simbad/sim-id?Ident=%401110935&Name=Cl*%20NGC%202632%20%20%20%20%20%20S%20%20%20%20%20106&submit=submit
-calib_id_6 = [224,198]
-calib_magGRI_6 = [[13.962,11.991],[13.504,11.718],[13.290,11.664]]
-calib_magGRI_6_err = [[0.009,0.001],[0.01,0.001],[0.012,0.001]]
+calib_id_6 = [198]
+calib_magGRI_6 = [[11.991],[11.718],[11.664]]
+calib_magGRI_6_err = [[0.001],[0.001],[0.001]]
 """
 calib_id_6 = [281,224,198]
 calib_magGRI_6 = [[13.643,13.962,11.991],[13.393,13.504,11.718],[13.184,13.290,11.664]]
@@ -174,7 +174,7 @@ dataframes_save([mag_i_o0_i7_c0[2], mag_i_o1_i7_c0[2], mag_i_o0_i6_c0[2], mag_i_
 
 # CLUSTER STARS
 
-member_stars = "code\\member_stars_test.csv"
+member_stars = "code\\member_stars.csv"
 
 mag_g_o0_i7_c1 = get_magnitude(7.0, 0, mag_g_o0_i7_c0[0], mag_g_o0_i7_c0[1], [], [], [], True, "Master_Light_G60s_20240307.fit", member_stars)
 mag_r_o0_i7_c1 = get_magnitude(7.0, 0, mag_r_o0_i7_c0[0], mag_r_o0_i7_c0[1], [], [], [], True, "Master_Light_R60s_20240307.fit", member_stars)
@@ -192,6 +192,6 @@ mag_g_o1_i6_c1 = get_magnitude(6.0, 1, mag_g_o1_i6_c0[0], mag_g_o1_i6_c0[1], [],
 mag_r_o1_i6_c1 = get_magnitude(6.0, 1, mag_r_o1_i6_c0[0], mag_r_o1_i6_c0[1], [], [], [], True, "Master_Light_R4s_20240306.fit", member_stars)
 mag_i_o1_i6_c1 = get_magnitude(6.0, 1, mag_i_o1_i6_c0[0], mag_i_o1_i6_c0[1], [], [], [], True, "Master_Light_I5s_20240306.fit", member_stars)
 
-dataframes_save([mag_g_o0_i7_c1[2], mag_g_o1_i7_c1[2], mag_g_o0_i6_c1[2], mag_g_o1_i6_c1[2]],"code\\magnitude_data\\magnitudesClusterNewG.csv")
-dataframes_save([mag_r_o0_i7_c1[2], mag_r_o1_i7_c1[2], mag_r_o0_i6_c1[2], mag_r_o1_i6_c1[2]],"code\\magnitude_data\\magnitudesClusterNewR.csv")
-dataframes_save([mag_i_o0_i7_c1[2], mag_i_o1_i7_c1[2], mag_i_o0_i6_c1[2], mag_i_o1_i6_c1[2]],"code\\magnitude_data\\magnitudesClusterNewI.csv")
+dataframes_save([mag_g_o0_i7_c1[2], mag_g_o1_i7_c1[2], mag_g_o0_i6_c1[2], mag_g_o1_i6_c1[2]],"code\\magnitude_data\\magnitudesClusterG.csv")
+dataframes_save([mag_r_o0_i7_c1[2], mag_r_o1_i7_c1[2], mag_r_o0_i6_c1[2], mag_r_o1_i6_c1[2]],"code\\magnitude_data\\magnitudesClusterR.csv")
+dataframes_save([mag_i_o0_i7_c1[2], mag_i_o1_i7_c1[2], mag_i_o0_i6_c1[2], mag_i_o1_i6_c1[2]],"code\\magnitude_data\\magnitudesClusterI.csv")
