@@ -15,9 +15,9 @@ from photutils.detection import find_peaks
 magnitude_data_output_path_g = "code\\magnitude_data\\magnitudesG.csv"
 magnitude_data_output_path_r = "code\\magnitude_data\\magnitudesR.csv"
 magnitude_data_output_path_i = "code\\magnitude_data\\magnitudesI.csv"
-magnitude_data_output_path_gc = "code\\magnitude_data\\magnitudesClusterG.csv"
-magnitude_data_output_path_rc = "code\\magnitude_data\\magnitudesClusterR.csv"
-magnitude_data_output_path_ic = "code\\magnitude_data\\magnitudesClusterI.csv"
+magnitude_data_output_path_gc = "code\\magnitude_data\\magnitudesClusterNewG.csv"
+magnitude_data_output_path_rc = "code\\magnitude_data\\magnitudesClusterNewR.csv"
+magnitude_data_output_path_ic = "code\\magnitude_data\\magnitudesClusterNewI.csv"
 
 file_loc = Path(__file__).resolve().parent.parent
 locG = PurePath(file_loc,magnitude_data_output_path_g)
@@ -36,10 +36,15 @@ data_IC = pd.read_csv(locIC, sep=',', comment='#')
 
 BS_G = data_GC[data_GC['star_id'] == 539]
 BS_I = data_IC[data_IC['star_id'] == 539] 
+test_G = data_GC[(data_GC['star_id'] == 351) | (data_GC['star_id'] == 317)]
+test_I = data_IC[(data_IC['star_id'] == 351) | (data_IC['star_id'] == 317)]
 
 #M = m + 5*(log10(p)+1)
 mag_G_BS = BS_G['magnitudes'] - (5 * (np.log10(1/(BS_G['plx']/1000))-1))
 mag_I_BS = BS_I['magnitudes'] - (5 * (np.log10(1/(BS_I['plx']/1000))-1))
+
+mag_test_G = test_G['magnitudes'] - (5 * (np.log10(1/(test_G['plx']/1000))-1))
+mag_test_I = test_I['magnitudes'] - (5 * (np.log10(1/(test_I['plx']/1000))-1))
 
 #mag_G = data_G['magnitudes'] + 5 * (np.log10(data_G['plx'])+1)
 #mag_R = data_R['magnitudes'] + 5 * (np.log10(data_R['plx'])+1)
@@ -66,7 +71,7 @@ iso_mag_I_corr = data_iso_corr['imag']
 
 
 
-plt.subplot(111)
+""" plt.subplot(111)
 plt.title('Color-magnitude diagram M44')
 #plt.scatter(mag_G - mag_I, mag_G, s = 7, alpha = 1, color = '#7570b3', label='Non-cluster stars')
 plt.scatter(iso_mag_G_8-iso_mag_I_8, iso_mag_G_8, s=10, alpha = 0.5, c='green', marker='o', label='isochrone 100 MY')
@@ -74,18 +79,20 @@ plt.scatter(iso_mag_G_9-iso_mag_I_9, iso_mag_G_9, s=10, alpha = 0.5, c='blue', m
 plt.scatter(iso_mag_G_corr-iso_mag_I_corr, iso_mag_G_corr, s=10, alpha = 0.5, c='purple', marker='o', label='isochrone ~750 MY (expection)')
 plt.scatter(mag_GC - mag_IC, mag_GC, s = 50, alpha = 1, color = '#d95f02', marker='*',label='Stars of M44')
 plt.scatter(mag_G_BS - mag_I_BS, mag_G_BS, s=80, c='blue', marker='*', label='BLUE STRAGGLER JIPPIE')
+plt.scatter(mag_test_G - mag_test_I, mag_test_G, s=80, c='black', marker='*', label='DUPLICATE JIPPIE')
 plt.legend()
 plt.gca().invert_yaxis()
 plt.xlabel("G - I")
 plt.ylabel("G")
 plt.show()
+ """
 
 plt.title('Color-color diagram M44')
-plt.scatter(mag_G - mag_I, mag_G, s = 10, alpha = 1, color = '#7570b3', label='Background stars')
-plt.scatter(mag_GC - mag_IC, mag_GC, s = 10, alpha = 1, color = '#d95f02', label='Stars of M44')
+#plt.scatter(mag_G - mag_I, mag_G, s = 10, alpha = 1, color = '#7570b3', label='Background stars')
+plt.scatter(mag_GC - mag_IC, mag_GC - mag_RC, s = 10, alpha = 1, color = '#d95f02', label='Stars of M44')
 plt.legend()
 plt.gca().invert_yaxis()
 plt.xlabel("G - I")
-plt.ylabel("G")
+plt.ylabel("G - R")
 plt.show()
 
