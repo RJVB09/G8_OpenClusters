@@ -88,8 +88,8 @@ def get_magnitude(image_id, overexposed, zeropoint, zeropoint_err, calib_id, cal
     magnitudes = - 2.5 * np.log10(star_data['corrected_sum'])
     magnitudes_err = 1 / (star_data['corrected_sum'] ** 2) * star_data['corrected_sum_err']
 
-    star_data['magnitudes'] = magnitudes
-    star_data['magnitudes_err'] = magnitudes_err
+    star_data['inst_magnitudes'] = magnitudes
+    star_data['inst_magnitudes_err'] = magnitudes_err
     star_data['star_id'] = star_pos['id']
     if 'plx' in star_pos:
         star_data['plx'] = star_pos['plx']
@@ -101,8 +101,8 @@ def get_magnitude(image_id, overexposed, zeropoint, zeropoint_err, calib_id, cal
     if not manual_zeropoint:
         average_zpt = 0
         for i in range(len(calib_id)):
-            calib_mag_data = float(star_data_df[star_data_df['star_id'] == calib_id[i]]['magnitudes'])
-            calib_mag_data_err = float(star_data_df[star_data_df['star_id'] == calib_id[i]]['magnitudes_err'])
+            calib_mag_data = float(star_data_df[star_data_df['star_id'] == calib_id[i]]['inst_magnitudes'])
+            calib_mag_data_err = float(star_data_df[star_data_df['star_id'] == calib_id[i]]['inst_magnitudes_err'])
             average_zpt += calib_mag[i] - calib_mag_data
             zeropoint_err += calib_mag_err[i] ** 2 + calib_mag_data_err ** 2
 
@@ -140,9 +140,14 @@ calib_magGRI_7_err = [[0.073],[0.054],[0.069]]
 #https://simbad.cds.unistra.fr/simbad/sim-id?Ident=%401109963&Name=BD%2b20%20%202170&submit=submit
 #https://simbad.cds.unistra.fr/simbad/sim-id?Ident=%4011682158&Name=BD%2b20%20%202160&submit=submit
 #https://simbad.cds.unistra.fr/simbad/sim-id?Ident=%401110935&Name=Cl*%20NGC%202632%20%20%20%20%20%20S%20%20%20%20%20106&submit=submit
+calib_id_6 = [224,198]
+calib_magGRI_6 = [[13.962,11.991],[13.504,11.718],[13.290,11.664]]
+calib_magGRI_6_err = [[0.009,0.001],[0.01,0.001],[0.012,0.001]]
+"""
 calib_id_6 = [281,224,198]
 calib_magGRI_6 = [[13.643,13.962,11.991],[13.393,13.504,11.718],[13.184,13.290,11.664]]
 calib_magGRI_6_err = [[0.01,0.009,0.001],[0.011,0.01,0.001],[0.012,0.012,0.001]]
+"""
 
 mag_g_o0_i7_c0 = get_magnitude(7.0, 0, 0, 0, calib_id_7, calib_magGRI_7[0], calib_magGRI_7_err[0], False, "Master_Light_G60s_20240307.fit", "code\\stars_data_20240307.csv")
 mag_r_o0_i7_c0 = get_magnitude(7.0, 0, 0, 0, calib_id_7, calib_magGRI_7[1], calib_magGRI_7_err[1], False, "Master_Light_R60s_20240307.fit", "code\\stars_data_20240307.csv")

@@ -73,3 +73,12 @@ plt.xlabel("G - I")
 plt.ylabel("G")
 plt.show()
 
+plt.title('Color-color diagram M44')
+plt.scatter(mag_G - mag_I, mag_G, s = 10, alpha = 1, color = '#7570b3', label='Background stars')
+plt.scatter(mag_GC - mag_IC, mag_GC, s = 10, alpha = 1, color = '#d95f02', label='Stars of M44')
+plt.legend()
+plt.gca().invert_yaxis()
+plt.xlabel("G - I")
+plt.ylabel("G")
+plt.show()
+
