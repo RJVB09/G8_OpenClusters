@@ -27,10 +27,10 @@ data_goudain['DE_ICRS'] = data_goudain['DE_ICRS'].astype(float)
 data_goudain['RA_ICRS'] = data_goudain['RA_ICRS'].astype(float)
 
 #import hier de twee sterdatabases die we zelf hebben!
-loc_stars_06 = PurePath(main_loc,"code\\stars_data_20240306.ecsv")
-loc_stars_07 = PurePath(main_loc,"code\\stars_data_20240307.ecsv")
-data_stars_06 = pd.read_csv(loc_stars_06, sep=' ', comment='#')
-data_stars_07 = pd.read_csv(loc_stars_07, sep=' ', comment='#')
+loc_stars_06 = PurePath(main_loc,"code\\stars_data_20240306.csv")
+loc_stars_07 = PurePath(main_loc,"code\\stars_data_20240307.csv")
+data_stars_06 = pd.read_csv(loc_stars_06, sep=',', comment='#')
+data_stars_07 = pd.read_csv(loc_stars_07, sep=',', comment='#')
 dec_corr_07 = -0.004168
 data_stars_07['skycoord_peak.dec'] = data_stars_07['skycoord_peak.dec'] + dec_corr_07
 
@@ -83,7 +83,7 @@ def db_verg(df, df_db):
     peak_value = df['peak_value'].values
     id = df['id'].values
     img = df['img'].values
-    ob = df['OB'].values
+    ob = df['ob'].values
     
 
     ra_diff = np.abs(ra_stars[:, None] - ra_db)
@@ -123,8 +123,8 @@ apertures_memb= CircularAperture(positions_memb, r=0.005)
 apertures_memb.plot(color='black', lw=2, alpha=1)
 
 #meer duplicates
-duplicates = member_stars[(member_stars['id'] == 516) | (member_stars['id'] == 493) | (member_stars['id'] == 351) | (member_stars['id'] == 317) | (member_stars['id'] == 112) | (member_stars['id'] == 153) | (member_stars['id'] == 9) | (member_stars['id'] == 27)]
-member_stars = pd.concat([member_stars, duplicates[duplicates['img']==7], duplicates[duplicates['img']==7]]).drop_duplicates(keep=False)
+#duplicates = member_stars[(member_stars['id'] == 516) | (member_stars['id'] == 493) | (member_stars['id'] == 351) | (member_stars['id'] == 317) | (member_stars['id'] == 112) | (member_stars['id'] == 153) | (member_stars['id'] == 9) | (member_stars['id'] == 27)]
+#member_stars = pd.concat([member_stars, duplicates[duplicates['img']==7], duplicates[duplicates['img']==7]]).drop_duplicates(keep=False)
 duplicates2 = member_stars[(member_stars['id'] == 516) | (member_stars['id'] == 493) | (member_stars['id'] == 351) | (member_stars['id'] == 317) | (member_stars['id'] == 112) | (member_stars['id'] == 153) | (member_stars['id'] == 9) | (member_stars['id'] == 27)]
 
 print(member_stars)
@@ -186,5 +186,6 @@ plt.scatter(member_stars['x_pixel'], member_stars['y_pixel'],facecolors='red', s
 for index, row in member_stars.iterrows():
     plt.text(row['x_pixel'], row['y_pixel'], int(row['id']), color='r', fontsize='medium')
 
-#member_stars.to_csv('member_stars.csv') #file maken met data
+member_stars.to_csv('member_stars_test.csv') #file maken met data
+
 plt.show()

@@ -54,7 +54,7 @@ mag_RC = data_RC['magnitudes'] - (5 * (np.log10(1/(data_RC['plx']/1000))-1))
 mag_GC = data_GC['magnitudes'] - (5 * (np.log10(1/(data_GC['plx']/1000))-1))
 
 # isochroon
-iso_loc = PurePath(file_loc,"code\\isochroon_test.dat")
+iso_loc = PurePath(file_loc,"code\\isochroon_0.333ext.dat")
 data_iso = pd.read_csv(iso_loc, delim_whitespace=True, comment='#')
 print(data_iso)
 print(data_iso.columns)
