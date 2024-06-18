@@ -36,8 +36,11 @@ data_IC = pd.read_csv(locIC, sep=',', comment='#')
 
 BS_G = data_GC[data_GC['star_id'] == 539]
 BS_I = data_IC[data_IC['star_id'] == 539] 
-test_G = data_GC[(data_GC['star_id'] == 351) | (data_GC['star_id'] == 317)]
-test_I = data_IC[(data_IC['star_id'] == 351) | (data_IC['star_id'] == 317)]
+
+stars_in_both_frames = [351,317]
+
+test_G = data_GC[(data_GC['star_id'].isin(stars_in_both_frames))]
+test_I = data_IC[(data_IC['star_id'].isin(stars_in_both_frames))]
 
 #M = m + 5*(log10(p)+1)
 mag_G_BS = BS_G['magnitudes'] - (5 * (np.log10(1/(BS_G['plx']/1000))-1))
