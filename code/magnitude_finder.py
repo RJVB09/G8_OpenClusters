@@ -93,6 +93,7 @@ def get_magnitude(image_id, overexposed, zeropoint, zeropoint_err, calib_id, cal
     star_data['star_id'] = star_pos['id']
     if 'plx' in star_pos:
         star_data['plx'] = star_pos['plx']
+    star_data['img'] = star_pos['img']
 
     star_data_df = star_data.to_pandas()
 
