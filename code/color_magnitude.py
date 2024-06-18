@@ -54,7 +54,7 @@ mag_RC = data_RC['magnitudes'] - (5 * (np.log10(1/(data_RC['plx']/1000))-1))
 mag_GC = data_GC['magnitudes'] - (5 * (np.log10(1/(data_GC['plx']/1000))-1))
 
 # isochroon
-iso_loc = PurePath(file_loc,"code\\isochroon_test.dat")
+iso_loc = PurePath(file_loc,"code\\isochroon_0.333ext.dat")
 data_iso = pd.read_csv(iso_loc, delim_whitespace=True, comment='#')
 print(data_iso)
 print(data_iso.columns)
@@ -71,7 +71,7 @@ iso_mag_I_corr = data_iso_corr['imag']
 
 
 
-""" plt.subplot(111)
+plt.subplot(111)
 plt.title('Color-magnitude diagram M44')
 #plt.scatter(mag_G - mag_I, mag_G, s = 7, alpha = 1, color = '#7570b3', label='Non-cluster stars')
 plt.scatter(iso_mag_G_8-iso_mag_I_8, iso_mag_G_8, s=10, alpha = 0.5, c='green', marker='o', label='isochrone 100 MY')
@@ -85,7 +85,7 @@ plt.gca().invert_yaxis()
 plt.xlabel("G - I")
 plt.ylabel("G")
 plt.show()
- """
+
 
 plt.title('Color-color diagram M44')
 #plt.scatter(mag_G - mag_I, mag_G, s = 10, alpha = 1, color = '#7570b3', label='Background stars')
