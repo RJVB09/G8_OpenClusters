@@ -186,6 +186,6 @@ plt.scatter(member_stars['x_pixel'], member_stars['y_pixel'],facecolors='red', s
 for index, row in member_stars.iterrows():
     plt.text(row['x_pixel'], row['y_pixel'], int(row['id']), color='r', fontsize='medium')
 
-member_stars.to_csv('member_stars_test.csv') #file maken met data
+#member_stars.to_csv('member_stars_test.csv') #file maken met data
 
 plt.show()
