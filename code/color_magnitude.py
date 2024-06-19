@@ -34,35 +34,48 @@ data_GC = pd.read_csv(locGC, sep=',', comment='#')
 data_RC = pd.read_csv(locRC, sep=',', comment='#')
 data_IC = pd.read_csv(locIC, sep=',', comment='#')
 
-BS_G = data_GC[data_GC['star_id'] == 539]
-BS_I = data_IC[data_IC['star_id'] == 539] 
-
 stars_in_both_frames = [351, 317, 493, 516, 112, 153, 9, 27]
 
 test_G = data_GC[(data_GC['star_id'].isin(stars_in_both_frames))]
 test_I = data_IC[(data_IC['star_id'].isin(stars_in_both_frames))]
-print(test_G)
-print(test_I)
-
 #M = m + 5*(log10(p)+1)
-mag_G_BS = BS_G['magnitudes'] - (5 * (np.log10(1/(BS_G['plx']/1000))-1))
-mag_I_BS = BS_I['magnitudes'] - (5 * (np.log10(1/(BS_I['plx']/1000))-1))
 
 mag_test_G = test_G['magnitudes'] - (5 * (np.log10(1/(test_G['plx']/1000))-1))
 mag_test_I = test_I['magnitudes'] - (5 * (np.log10(1/(test_I['plx']/1000))-1))
+print(test_I)
 
-#mag_G = data_G['magnitudes'] + 5 * (np.log10(data_G['plx'])+1)
-#mag_R = data_R['magnitudes'] + 5 * (np.log10(data_R['plx'])+1)
-#mag_I = data_I['magnitudes'] + 5 * (np.log10(data_I['plx'])+1)
-mag_IC = data_IC['magnitudes'] - (5 * (np.log10(1/(data_IC['plx']/1000))-1))
+#I correctiewaarde vinden
+G_I_lijst = list(mag_test_G - mag_test_I)
+diff_G_I_lijst = []
+print(G_I_lijst)
+for n in range(4):
+    diff_G_I_lijst.append(G_I_lijst[n] - G_I_lijst[n+4])
+correctie_I = np.mean(diff_G_I_lijst)
+correctie_I_std = np.std(diff_G_I_lijst)
+print(correctie_I, correctie_I_std)
+
+# als 'img' == 6.0, -corr op mag_IC
+data_IC['corr'] = np.where(data_IC['img'] == 7.0, correctie_I, 0)
+print(data_IC)
+
+BS_G = data_GC[data_GC['star_id'] == 539]
+BS_I = data_IC[data_IC['star_id'] == 539] 
+
+mag_G_BS = BS_G['magnitudes'] - (5 * (np.log10(1/(BS_G['plx']/1000))-1))
+mag_I_BS = BS_I['magnitudes'] - (5 * (np.log10(1/(BS_I['plx']/1000))-1)) + BS_I['corr']
+
+mag_IC = data_IC['magnitudes'] - (5 * (np.log10(1/(data_IC['plx']/1000))-1)) + data_IC['corr']
+mag_IC_gcorr = data_IC['magnitudes'] - (5 * (np.log10(1/(data_IC['plx']/1000))-1))
 mag_RC = data_RC['magnitudes'] - (5 * (np.log10(1/(data_RC['plx']/1000))-1))
 mag_GC = data_GC['magnitudes'] - (5 * (np.log10(1/(data_GC['plx']/1000))-1))
+
+test_I_corr = data_IC[(data_IC['star_id'].isin(stars_in_both_frames))]
+mag_test_I_corr = test_I_corr['magnitudes'] - (5 * (np.log10(1/(test_I_corr['plx']/1000))-1)) + test_I_corr['corr']
+
 
 # isochroon
 iso_loc = PurePath(file_loc,"code\\isochroon_0.333ext.dat")
 data_iso = pd.read_csv(iso_loc, delim_whitespace=True, comment='#')
-print(data_iso)
-print(data_iso.columns)
 data_iso_8 = data_iso[data_iso['logAge'] == 8] 
 data_iso_9 = data_iso[data_iso['logAge'] == 9] 
 data_iso_corr = data_iso[data_iso['logAge'] == 8.87506] 
@@ -74,8 +87,6 @@ iso_mag_I_9 = data_iso_9['imag']
 iso_mag_G_corr = data_iso_corr['gmag']
 iso_mag_I_corr = data_iso_corr['imag']
 
-
-
 plt.subplot(111)
 plt.title('Color-magnitude diagram M44')
 #plt.scatter(mag_G - mag_I, mag_G, s = 7, alpha = 1, color = '#7570b3', label='Non-cluster stars')
@@ -84,7 +95,7 @@ plt.scatter(iso_mag_G_9-iso_mag_I_9, iso_mag_G_9, s=10, alpha = 0.5, c='blue', m
 plt.scatter(iso_mag_G_corr-iso_mag_I_corr, iso_mag_G_corr, s=10, alpha = 0.5, c='purple', marker='o', label='isochrone ~750 MY (expection)')
 plt.scatter(mag_GC - mag_IC, mag_GC, s = 50, alpha = 1, color = '#d95f02', marker='*',label='Stars of M44')
 plt.scatter(mag_G_BS - mag_I_BS, mag_G_BS, s=80, c='blue', marker='*', label='BLUE STRAGGLER JIPPIE')
-plt.scatter(mag_test_G - mag_test_I, mag_test_G, s=80, c='black', marker='*', label='DUPLICATE JIPPIE')
+plt.scatter(mag_test_G - mag_test_I_corr, mag_test_G, s=80, c='black', marker='*', label='DUPLICATE JIPPIE')
 plt.legend()
 plt.gca().invert_yaxis()
 plt.xlabel("G - I")
@@ -94,7 +105,7 @@ plt.show()
 
 plt.title('Color-color diagram M44')
 #plt.scatter(mag_G - mag_I, mag_G, s = 10, alpha = 1, color = '#7570b3', label='Background stars')
-plt.scatter(mag_GC - mag_IC, mag_GC - mag_RC, s = 10, alpha = 1, color = '#d95f02', label='Stars of M44')
+plt.scatter(mag_GC - mag_IC_gcorr, mag_GC - mag_RC, s = 10, alpha = 1, color = '#d95f02', label='Stars of M44')
 plt.legend()
 plt.gca().invert_yaxis()
 plt.xlabel("g - i")
@@ -103,7 +114,7 @@ plt.show()
 
 plt.title('Color-color diagram M44')
 #plt.scatter(mag_G - mag_I, mag_G, s = 10, alpha = 1, color = '#7570b3', label='Background stars')
-plt.scatter(0.98*(mag_GC - mag_RC) + 0.22, 1.09*(mag_RC - mag_IC) + 0.22, s = 10, alpha = 1, color = '#d95f02', label='Stars of M44')
+plt.scatter(0.98*(mag_GC - mag_RC) + 0.22, 1.09*(mag_RC - mag_IC_gcorr) + 0.22, s = 10, alpha = 1, color = '#d95f02', label='Stars of M44')
 plt.legend()
 plt.xlabel("B - V")
 plt.ylabel("V - R")
