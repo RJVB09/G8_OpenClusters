@@ -48,7 +48,7 @@ mag_test_G = test_G['magnitudes'] - (5 * (np.log10(100/(test_G['plx']))))
 mag_test_I = test_I['magnitudes'] - (5 * (np.log10(100/(test_I['plx']))))
 mag_test_G_err = np.sqrt(test_G['magnitudes_err'] ** 2 + (5 / (np.log(10) * test_G['plx'])) ** 2 * parallax_error ** 2)
 mag_test_I_err = np.sqrt(test_G['magnitudes_err'] ** 2 + (5 / (np.log(10) * test_I['plx'])) ** 2 * parallax_error ** 2)
-print(test_I)
+#print(test_I)
 mag_test_G = test_G['magnitudes'] - (5 * (np.log10(1/(test_G['plx']/1000))-1))
 mag_test_I = test_I['magnitudes'] - (5 * (np.log10(1/(test_I['plx']/1000))-1))
 
@@ -64,7 +64,7 @@ correctie_I_std = np.std(diff_G_I_lijst)
 # als 'img' == 6.0, -corr op mag_IC
 data_IC['corr'] = np.where(data_IC['img'] == 7.0, correctie_I, 0)
 data_IC['corr_err'] = np.where(data_IC['img'] == 7.0, correctie_I_std, 0)
-print(data_IC)
+#print(data_IC)
 
 BS_G = data_GC[data_GC['star_id'] == 539]
 BS_I = data_IC[data_IC['star_id'] == 539] 
@@ -195,19 +195,29 @@ plt.title('Color-magnitude diagram M44')
 #plt.scatter(mag_G - mag_I, mag_G, s = 7, alpha = 1, color = '#7570b3', label='Non-cluster stars')
 #plt.scatter(iso_mag_G_8-iso_mag_I_8, iso_mag_G_8, s=10, alpha = 0.5, c='green', marker='o', label='isochrone 100 MY')
 #plt.scatter(iso_mag_G_9-iso_mag_I_9, iso_mag_G_9, s=10, alpha = 0.5, c='blue', marker='o', label='isochrone 1000 MY')
-plt.scatter(iso_mag_G_corr-iso_mag_I_corr, iso_mag_G_corr, s=10, alpha = 0.5, c='purple', marker='o', label='isochrone ~750 MY')
-plt.errorbar(cluster_stars_selected['G-I'], cluster_stars_selected['G'], xerr= cluster_stars_selected['G-I_err'], yerr=cluster_stars_selected['G_err'], color = '#d95f02', fmt="*",label='Stars of M44')
-plt.errorbar(cluster_stars_rest['G-I'], cluster_stars_rest['G'], xerr= cluster_stars_rest['G-I_err'], yerr=cluster_stars_rest['G_err'], color = '#666666', fmt="*",label='Stars of M44 (g-i error > 0.5)', alpha = 0.1)
+#plt.scatter(iso_mag_G_corr-iso_mag_I_corr, iso_mag_G_corr, s=10, alpha = 1, c='#a6cee3', marker='o', label='isochrone ~750 MY')
+#plt.errorbar(cluster_stars_selected['G-I'], cluster_stars_selected['G'], xerr= cluster_stars_selected['G-I_err'], yerr=cluster_stars_selected['G_err'], color = '#b2df8a', fmt="*",label='Stars of M44')
+#plt.errorbar(cluster_stars_rest['G-I'], cluster_stars_rest['G'], xerr= cluster_stars_rest['G-I_err'], yerr=cluster_stars_rest['G_err'], color = '#666666', fmt="*",label='Stars of M44 (g-i error > 0.5)', alpha = 0.1)
+#plt.scatter(cluster_stars_rest['G-I'], cluster_stars_rest['G'], s = 50, alpha = 0.2, color = '#33a02c', marker='*',label='Stars of M44 (g-i error > 0.5)')
 #plt.scatter(mag_GC - mag_IC, mag_GC, s = 50, alpha = 1, color = '#d95f02', marker='*',label='Stars of M44')
-plt.errorbar(mag_G_BS - mag_I_BS, mag_G_BS, xerr= np.sqrt(mag_G_BS_err ** 2 + mag_I_BS_err ** 2), yerr=mag_G_BS_err, color = '#7570b3', fmt="*")
+#plt.errorbar(mag_G_BS - mag_I_BS, mag_G_BS, xerr= np.sqrt(mag_G_BS_err ** 2 + mag_I_BS_err ** 2), yerr=mag_G_BS_err, color = '#1f78b4', fmt="*")
 
-plt.errorbar(mag_test_G - mag_test_I_corr, mag_test_G, xerr= np.sqrt(mag_test_G_err ** 2 + mag_test_I_corr_err ** 2), yerr=mag_test_G_err, color = '#666666', fmt="*",label='Stars in both frames')
-plt.scatter(mag_G_BS - mag_I_BS, mag_G_BS, s=100, c='#7570b3', marker='*', label='Literature blue straggler')
+#plt.errorbar(mag_test_G - mag_test_I_corr, mag_test_G, xerr= np.sqrt(mag_test_G_err ** 2 + mag_test_I_corr_err ** 2), yerr=mag_test_G_err, color = '#b2df8a', fmt="*",label='Stars in both frames')
+#plt.scatter(mag_G_BS - mag_I_BS, mag_G_BS, s=1000, c='#1f78b4', marker='*', label='Literature blue straggler')
 #plt.scatter(mag_test_G - mag_test_I_corr, mag_test_G, s=80, c='black', marker='*', label='Stars in both frames')
+
+print(iso_mag_G_corr.tolist()[0:10])
+
+plt.plot((iso_mag_G_corr-iso_mag_I_corr).tolist()[0:220], iso_mag_G_corr.tolist()[0:220], '--', label='isochrone ~750 MY', color = '#666666')
+plt.errorbar(cluster_stars_selected['G-I'], cluster_stars_selected['G'], xerr= cluster_stars_selected['G-I_err'], yerr=cluster_stars_selected['G_err'], color = '#33a02c', ecolor='#b2df8a', fmt="*",label='Stars of M44')
+plt.scatter(cluster_stars_rest['G-I'], cluster_stars_rest['G'], s = 50, alpha = 0.4, color = '#33a02c', marker='*',label='Stars of M44 (g-i error > 0.5)')
+plt.errorbar(mag_G_BS - mag_I_BS, mag_G_BS, xerr= np.sqrt(mag_G_BS_err ** 2 + mag_I_BS_err ** 2), yerr=mag_G_BS_err, color = '#1f78b4', ecolor='#a6cee3', fmt="*", markersize = 10, label='Literature blue straggler')
+
+
 plt.legend()
 plt.gca().invert_yaxis()
-plt.xlabel("G - I")
-plt.ylabel("G")
+plt.xlabel("g - i")
+plt.ylabel("g")
 plt.show()
 
 data_GC['mag_GC - mag_IC'] = mag_GC - mag_IC
