@@ -116,13 +116,25 @@ cluster_stars['G_err'] = mag_GC_err
 cluster_stars_selected = cluster_stars[cluster_stars['G-I_err'] <= 0.5]
 cluster_stars_rest = cluster_stars[cluster_stars['G-I_err'] > 0.5]
 x = (mag_GC - mag_IC).to_numpy()
-x_err = 'ENTER'
+x_err = (np.sqrt(mag_GC_err**2 + mag_IC_err**2)).to_numpy()
 y = mag_GC.to_numpy()
-y_err = 'ENTER'
+y_err = mag_GC_err.to_numpy()
 isoage = data_iso['logAge'].to_numpy()
 isoext = np.full(len(isoage), 0.333)
 isoxs = (data_iso['gmag'] - data_iso['imag']).to_numpy()
 isoys = data_iso['gmag'].to_numpy()
+nan_ids = np.isnan(x)
+print(nan_ids)
+x_filt = x[~nan_ids]
+x_err_filt = x_err[~nan_ids]
+y_filt = y[~nan_ids]
+y_err_filt = y_err[~nan_ids]
+#too high error
+err_ids = np.less_equal(x_filt, np.full(len(x_filt), 0.5))
+x_filt_2 = x_filt[~err_ids]
+x_err_filt_2 = x_err_filt[~err_ids]
+y_filt_2 = y_filt[~err_ids]
+y_err_filt_2 = y_err_filt[~err_ids]
 
 #SOURCE MITCHEL STOOP
 def find_age_with_extinction(x, x_err, y, y_err, isoage, isoext, isoxs, isoys):
@@ -148,7 +160,6 @@ def find_age_with_extinction(x, x_err, y, y_err, isoage, isoext, isoxs, isoys):
     
     age_list = np.unique(isoage) # all possible ages in a list
     ext_list = np.unique(isoext)
-
     # make a matrix for the probabilities
     p_all = np.zeros((len(ext_list), len(age_list)))
     
@@ -187,8 +198,19 @@ def find_age_with_extinction(x, x_err, y, y_err, isoage, isoext, isoxs, isoys):
             p_all[i,j] = p_sum_log
         
     return p_all
-
-
+p_all = find_age_with_extinction(x_filt, x_err_filt, y_filt, y_err_filt, isoage, isoext, isoxs, isoys)
+p_all_err_filtered = find_age_with_extinction(x_filt_2, x_err_filt_2, y_filt_2, y_err_filt_2, isoage, isoext, isoxs, isoys)
+p_all = p_all - np.amin(p_all)
+p_all = p_all / np.amax(p_all)
+p_all_err_filtered = p_all_err_filtered - np.amin(p_all_err_filtered)
+p_all_err_filtered = p_all_err_filtered / np.amax(p_all_err_filtered)
+plt.plot(np.unique(isoage),p_all.reshape(-1), label='Propability all members')
+plt.plot(np.unique(isoage),p_all_err_filtered.reshape(-1), label='Propability magnitude error $\leq$0.5')
+plt.vlines([np.log10(600000000),np.log10(700000000)],0,1,'black', linestyles='dashed', label='Expectation 600-700 MY')
+plt.ylabel('Propability')
+plt.xlabel('$log_{10}$(Age) (year)')
+plt.legend()
+plt.show()
 
 plt.subplot(111)
 plt.title('Color-magnitude diagram M44')
