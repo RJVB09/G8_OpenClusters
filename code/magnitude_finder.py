@@ -85,8 +85,8 @@ def get_magnitude(image_id, overexposed, zeropoint, zeropoint_err, calib_id, cal
     for col in star_data.colnames:
         star_data[col].info.format = '%.8g'
 
-    magnitudes = - 2.5 * np.log10(star_data['corrected_sum'])
-    magnitudes_err = 1 / (star_data['corrected_sum'] ** 2) * star_data['corrected_sum_err']
+    magnitudes = -2.5 * np.log10(star_data['corrected_sum'])
+    magnitudes_err = 2.5 / (np.log(10) * star_data['corrected_sum']) * star_data['corrected_sum_err']
 
     star_data['inst_magnitudes'] = magnitudes
     star_data['inst_magnitudes_err'] = magnitudes_err
