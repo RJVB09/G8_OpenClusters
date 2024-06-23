@@ -136,6 +136,12 @@ plt.scatter(x=data_goudain['RA_ICRS'], y=data_goudain['DE_ICRS'], color='#1f78b4
 plt.gca().set_aspect('equal')
 plt.ylim(19.3,20.4)
 plt.xlim(129.7,130.4)
+plt.rc('axes', titlesize=18)
+plt.rc('axes', labelsize=18)
+plt.rc('xtick', labelsize=10)
+plt.rc('ytick', labelsize=10)
+plt.rc('legend', fontsize=12)
+plt.rc('figure', titlesize=18)
 apertures_memb= CircularAperture(positions_memb, r=0.015)
 apertures_memb.plot(color='red', lw=2, alpha=1, zorder=15)
 
