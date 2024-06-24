@@ -212,8 +212,15 @@ plt.xlabel('$log_{10}$(Age) (year)')
 plt.legend()
 plt.show()
 
+plt.rc('axes', titlesize=18)     # fontsize of the axes title
+plt.rc('axes', labelsize=18)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=10)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=10)    # fontsize of the tick labels
+plt.rc('legend', fontsize=12)    # legend fontsize
+plt.rc('figure', titlesize=18)  # fontsize of the figure title
+
 plt.subplot(111)
-plt.title('Color-magnitude diagram M44')
+plt.title('Color-magnitude diagram of M44')
 #plt.scatter(mag_G - mag_I, mag_G, s = 7, alpha = 1, color = '#7570b3', label='Non-cluster stars')
 #plt.scatter(iso_mag_G_8-iso_mag_I_8, iso_mag_G_8, s=10, alpha = 0.5, c='green', marker='o', label='isochrone 100 MY')
 #plt.scatter(iso_mag_G_9-iso_mag_I_9, iso_mag_G_9, s=10, alpha = 0.5, c='blue', marker='o', label='isochrone 1000 MY')
@@ -238,8 +245,9 @@ plt.errorbar(mag_G_BS - mag_I_BS, mag_G_BS, xerr= np.sqrt(mag_G_BS_err ** 2 + ma
 
 plt.legend()
 plt.gca().invert_yaxis()
-plt.xlabel("g - i")
-plt.ylabel("g")
+plt.xlabel("Color (g' - i')")
+plt.ylabel("Absolute magnitude (g')")
+
 plt.show()
 
 data_GC['mag_GC - mag_IC'] = mag_GC - mag_IC
