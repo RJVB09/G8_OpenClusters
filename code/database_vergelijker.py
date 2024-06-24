@@ -41,7 +41,7 @@ plt.scatter(data_stars_07['skycoord_peak.ra'],data_stars_07['skycoord_peak.dec']
 plt.scatter(x=data_db['RA_ICRS'], y=data_db['DE_ICRS'], color='#a6cee3', alpha=0.7,marker='8')
 plt.scatter(x=data_goudain['RA_ICRS'], y=data_goudain['DE_ICRS'], color='#1f78b4', alpha=0.7,marker='8')
 plt.xlabel('RA (degrees)')
-plt.ylabel('DE (arc-hours?)')
+plt.ylabel('DEC (degrees)')
 plt.gca().set_aspect('equal')
 positions_06  = data_stars_06[['skycoord_peak.ra', 'skycoord_peak.dec']]
 apertures_06 = CircularAperture(positions_06, r=0.0001197)
@@ -118,9 +118,15 @@ member_stars_06_goud = db_verg(data_stars_06, data_goudain)
 member_stars_07_goud = db_verg(data_stars_07, data_goudain)
 member_stars = pd.concat([member_stars_06_alf, member_stars_07_alf, member_stars_06_goud, member_stars_07_goud], ignore_index=True)
 member_stars = member_stars.drop_duplicates(subset=['skycoord_peak.ra', 'skycoord_peak.dec'], keep='first', ignore_index=True) #haalt duplicates er uit
-positions_memb = member_stars[['skycoord_peak.ra', 'skycoord_peak.dec']]
+positions_memb = member_stars[['skycoord_peak.dec','skycoord_peak.ra']]
 apertures_memb= CircularAperture(positions_memb, r=0.005)
 apertures_memb.plot(color='black', lw=2, alpha=1)
+plt.rc('axes', titlesize=18)
+plt.rc('axes', labelsize=18)
+plt.rc('xtick', labelsize=13)
+plt.rc('ytick', labelsize=13)
+plt.rc('legend', fontsize=13)
+plt.rc('figure', titlesize=18)
 
 #meer duplicates
 #duplicates = member_stars[(member_stars['id'] == 516) | (member_stars['id'] == 493) | (member_stars['id'] == 351) | (member_stars['id'] == 317) | (member_stars['id'] == 112) | (member_stars['id'] == 153) | (member_stars['id'] == 9) | (member_stars['id'] == 27)]
@@ -128,20 +134,24 @@ apertures_memb.plot(color='black', lw=2, alpha=1)
 duplicates2 = member_stars[(member_stars['id'] == 516) | (member_stars['id'] == 493) | (member_stars['id'] == 351) | (member_stars['id'] == 317) | (member_stars['id'] == 112) | (member_stars['id'] == 153) | (member_stars['id'] == 9) | (member_stars['id'] == 27)]
 
 print(member_stars)
-
-plt.subplot(122)
-plt.scatter(data_stars_06['skycoord_peak.ra'],data_stars_06['skycoord_peak.dec'],color='#b2df8a',marker='*')
-plt.scatter(data_stars_07['skycoord_peak.ra'],data_stars_07['skycoord_peak.dec'],color='#33a02c',marker='*')
-plt.scatter(x=data_db['RA_ICRS'], y=data_db['DE_ICRS'], color='#a6cee3', alpha=0.7,marker='8')
-plt.scatter(x=data_goudain['RA_ICRS'], y=data_goudain['DE_ICRS'], color='#1f78b4', alpha=0.7,marker='8')
+plt.figure(4)
+plt.subplot(111)
+plt.scatter(data_stars_06['skycoord_peak.dec'],data_stars_06['skycoord_peak.ra'],color='#33a02c',marker='*', s=60, zorder=10)
+plt.scatter(y=data_db['RA_ICRS'], x=data_db['DE_ICRS'], color='#a6cee3', alpha=0.7,marker='8', zorder=5)
+plt.scatter(y=data_goudain['RA_ICRS'], x=data_goudain['DE_ICRS'], color='#1f78b4', alpha=0.7,marker='8', zorder=5)
 plt.gca().set_aspect('equal')
-plt.ylim(19.3,20.4)
-plt.xlim(129.7,130.4)
+plt.xlim(19.3,20.4)
+plt.ylim(129.7,130.4)
+
 apertures_memb= CircularAperture(positions_memb, r=0.015)
-apertures_memb.plot(color='red', lw=2, alpha=1)
-plt.xlabel('RA (degrees)')
-plt.ylabel('DE (arc-hours?)')
-plt.legend(["stars img 06/03", "stars img 07/03", "members Alfonso", "members Goudain"], loc="lower right")
+apertures_memb.plot(color='red', lw=2, alpha=1, zorder=15)
+
+plt.scatter(data_stars_07['skycoord_peak.dec'],data_stars_07['skycoord_peak.ra'],color='#33a02c',marker='*', zorder=10, s=60)
+plt.ylabel('RA (degrees)', fontsize=20)
+plt.xlabel('DEC (degrees)', fontsize=20)
+plt.legend(["Stars from data","Members Alfonso 2023","Members Cantat-Gaudin 2018","Confirmed members",],loc="lower left")
+
+
 #afbeeldingen plotten met member stars
 from astropy.io import fits
 from astropy.utils.data import get_pkg_data_filename
