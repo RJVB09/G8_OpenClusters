@@ -121,6 +121,12 @@ member_stars = member_stars.drop_duplicates(subset=['skycoord_peak.ra', 'skycoor
 positions_memb = member_stars[['skycoord_peak.dec','skycoord_peak.ra']]
 apertures_memb= CircularAperture(positions_memb, r=0.005)
 apertures_memb.plot(color='black', lw=2, alpha=1)
+plt.rc('axes', titlesize=18)
+plt.rc('axes', labelsize=18)
+plt.rc('xtick', labelsize=13)
+plt.rc('ytick', labelsize=13)
+plt.rc('legend', fontsize=13)
+plt.rc('figure', titlesize=18)
 
 #meer duplicates
 #duplicates = member_stars[(member_stars['id'] == 516) | (member_stars['id'] == 493) | (member_stars['id'] == 351) | (member_stars['id'] == 317) | (member_stars['id'] == 112) | (member_stars['id'] == 153) | (member_stars['id'] == 9) | (member_stars['id'] == 27)]
@@ -136,19 +142,14 @@ plt.scatter(y=data_goudain['RA_ICRS'], x=data_goudain['DE_ICRS'], color='#1f78b4
 plt.gca().set_aspect('equal')
 plt.xlim(19.3,20.4)
 plt.ylim(129.7,130.4)
-plt.rc('axes', titlesize=18)
-plt.rc('axes', labelsize=18)
-plt.rc('xtick', labelsize=13)
-plt.rc('ytick', labelsize=13)
-plt.rc('legend', fontsize=14)
-plt.rc('figure', titlesize=18)
+
 apertures_memb= CircularAperture(positions_memb, r=0.015)
 apertures_memb.plot(color='red', lw=2, alpha=1, zorder=15)
 
 plt.scatter(data_stars_07['skycoord_peak.dec'],data_stars_07['skycoord_peak.ra'],color='#33a02c',marker='*', zorder=10, s=60)
 plt.ylabel('RA (degrees)', fontsize=20)
 plt.xlabel('DEC (degrees)', fontsize=20)
-plt.legend(["Stars from data","Members Alfonso 2023","Members Cantat-Gaudin 2018","Confirmed members",],loc="lower right")
+plt.legend(["Stars from data","Members Alfonso 2023","Members Cantat-Gaudin 2018","Confirmed members",],loc="lower left")
 
 
 #afbeeldingen plotten met member stars
